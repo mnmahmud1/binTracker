@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,700;1,800;1,900&display=swap");
+
+body {
+	font-family: "Mulish", sans-serif;
+	font-size: 10pt;
+}
+
+.preloader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-color: #fff;
+}
+.preloader .loading {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font: 14px arial;
+}
+
+.t400 {
+	font-weight: 400;
+}
+
+.t700 {
+	font-weight: 700;
+}
+
+.tcgray {
+	color: #9fa2b4;
+}
+
+.fs8 {
+	font-size: 8pt;
+}
+
+.form-control {
+	background-color: #fcfdfe;
+	border: 1px solid #f0f1f7;
+}
+
+.form-control::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: #c8c8c8;
+}
+.form-control:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: #c8c8c8;
+	opacity: 1;
+}
+.form-control::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #c8c8c8;
+	opacity: 1;
+}
+.form-control:-ms-input-placeholder {
+	/* Internet Explorer 10-11 */
+	color: #c8c8c8;
+}
+.form-control::-ms-input-placeholder {
+	/* Microsoft Edge */
+	color: #c8c8c8;
+}
+
+::placeholder {
+	/* Most modern browsers support this now. */
+	color: #909;
+}
