@@ -71,3 +71,13 @@ body {
 	/* Most modern browsers support this now. */
 	color: #909;
 }
+
+.bg-dark {
+	background-color: #363740 !important;
+}
+
+.nav-item.active {
+	background-color: #9fa2b422;
+	border-left: 1px solid #dde2ff;
+	color: #dde2ff;
+}
