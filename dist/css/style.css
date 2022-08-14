@@ -100,3 +100,21 @@ textarea:read-only {
 #map {
 	height: 325px;
 }
+
+.rounded-pill.text-bg-success {
+	background-color: #29cc97 !important;
+	color: #fff !important;
+	border: 1px solid #29cc97 !important;
+}
+
+.rounded-pill.text-bg-secondary {
+	background-color: #f0f1f7 !important;
+	color: #9fa2b4 !important;
+	border: 1px solid #f0f1f7 !important;
+}
+
+.rounded-pill.text-bg-danger {
+	background-color: #f12b2c !important;
+	color: #fff !important;
+	border: 1px solid #f12b2c !important;
+}

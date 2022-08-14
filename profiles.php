@@ -224,27 +224,27 @@
 						<h5 class="modal-title" id="updatePasswordLabel">Renew Password</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body">
-						<form action="" method="post">
-							<div class="mb-3">
-								<label for="oldPassword" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>
-								<input type="password" name="oldPassword" id="oldPassword" class="form-control p-3" placeholder="Enter old password" autofocus required />
-							</div>
-							<hr />
-							<div class="mb-3">
-								<label for="newPassword" class="form-label fw-bolder text-gray-800">NEW PASSWORD</label>
-								<input type="password" name="newPassword" id="newPassword" class="form-control p-3" placeholder="Enter new password" required />
-							</div>
-							<div class="mb-3">
-								<label for="repeatPassword" class="form-label fw-bolder text-gray-800">REPEAT PASSWORD</label>
-								<input type="password" name="repeatPassword" id="repeatPassword" class="form-control p-3"  placeholder="Repat new password"  required />
-							</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-						<button type="submit" name="updatePass" id="updatePass" class="btn btn-primary">Update Password</button>
-                    </form>
-                    </div>
+					<form action="" method="post">
+						<div class="modal-body">
+								<div class="mb-3">
+									<label for="oldPassword" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>
+									<input type="password" name="oldPassword" id="oldPassword" class="form-control p-3" placeholder="Enter old password" autofocus required />
+								</div>
+								<hr />
+								<div class="mb-3">
+									<label for="newPassword" class="form-label fw-bolder text-gray-800">NEW PASSWORD</label>
+									<input type="password" name="newPassword" id="newPassword" class="form-control p-3" placeholder="Enter new password" required />
+								</div>
+								<div class="mb-3">
+									<label for="repeatPassword" class="form-label fw-bolder text-gray-800">REPEAT PASSWORD</label>
+									<input type="password" name="repeatPassword" id="repeatPassword" class="form-control p-3"  placeholder="Repat new password"  required />
+								</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+							<button type="submit" name="updatePass" id="updatePass" class="btn btn-primary">Update Password</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
