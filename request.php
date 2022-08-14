@@ -7,7 +7,7 @@
 		<meta name="description" content="" />
 		<meta name="author" content="" />
 
-		<title>History | BinTracker</title>
+		<title>Requests | BinTracker</title>
 
 		<!-- Custom fonts for this template-->
 		<link href="dist/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -21,13 +21,12 @@
 
 		<!-- Boootstrap v5.2 -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
-		
-		<!-- My configuration css -->
-		<link rel="stylesheet" href="dist/css/style.css" />
 
 		<!-- Datatables -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css" />
 
+		<!-- My configuration css -->
+		<link rel="stylesheet" href="dist/css/style.css" />
 	</head>
 
 	<body id="page-top">
@@ -76,7 +75,7 @@
 				</li>
 
 				<!-- Nav Item  -->
-				<li class="nav-item active">
+				<li class="nav-item">
 					<a class="nav-link" href="history.php">
 						<i class="fa-solid fa-clock-rotate-left ml-3 mr-2"></i>
 						<span>History</span></a
@@ -84,7 +83,7 @@
 				</li>
 
 				<!-- Nav Item  -->
-				<li class="nav-item">
+				<li class="nav-item active">
 					<a class="nav-link" href="profiles.php">
 						<i class="fa-solid fa-circle-user ml-3 mr-2"></i>
 						<span>Profiles</span></a
@@ -93,7 +92,7 @@
 
 				<!-- Divider -->
 				<hr class="sidebar-divider d-none d-md-block mt-3 mb-3" />
-				
+
 				<!-- Nav Item  -->
 				<li class="nav-item">
 					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
@@ -121,73 +120,98 @@
 						<nav aria-label="breadcrumb" class="mb-4">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">BinTracker</a></li>
-								<li class="breadcrumb-item active" aria-current="page">History</li>
+								<li class="breadcrumb-item"><a href="profiles.php">Profiles</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Requests</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">History - Wisata Curug Ciherang Sukamakmur</h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Requests - Wisata Curug Ciherang Sukamakmur</h1>
 
-						<div class="row">
+						<div class="row mb-3">
 							<div class="col">
 								<div class="card">
 									<div class="card-body">
-										<div class="row d-flex justify-content-between align-items-center mb-4">
+										<div class="row d-flex justify-content-between align-items-center">
 											<div class="col text-start">
-												<span class="h6 fw-bold text-gray-800"> Notification History </span>
+												<p class="h6 fw-bold text-gray-800">Create new request</p>
+												<p class="tcgray">Report a problem when you use this app or etc.</p>
 											</div>
 										</div>
 
-										<table class="display" id="table-device">
-											<thead>
-												<tr>
-													<th>#</th>
-													<th>Device</th>
-													<th>Status</th>
-													<th>Description</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>1</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">60/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-danger px-3">LOST</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-											</tbody>
-										</table>
+										<form action="" method="post">
+											<div class="row mt-2">
+												<div class="col">
+													<div class="mb-3">
+														<label for="title" class="form-label fw-bolder text-gray-800">TITLE</label>
+														<input type="text" name="title" id="title" class="form-control py-4" placeholder="Your title request" required />
+													</div>
+												</div>
+												<div class="col">
+													<div class="mb-3">
+														<label for="agency-name" class="form-label fw-bolder text-gray-800">AGENCY NAME</label>
+														<input type="text" name="agency-name" id="agency-name" class="form-control py-4" value="Wisata Curug Ciherang Sukamakmur" readonly />
+													</div>
+												</div>
+											</div>
+
+											<div class="row">
+												<div class="col">
+													<label for="request" class="form-label fw-bolder text-gray-800">REQUEST / PROBLEM</label>
+													<textarea type="text" name="request" id="request" class="form-control py-4" placeholder="Your Request" required></textarea>
+												</div>
+											</div>
+
+											<div class="row">
+												<div class="col d-flex justify-content-end">
+													<button type="submit" class="btn btn-primary mt-3" name="sendRequest" id="sendRequest">Send to administrator</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row mb-5">
+							<div class="col">
+								<div class="card">
+									<div class="card-body">
+										<div class="row d-flex justify-content-between align-items-center">
+											<div class="col text-start">
+												<p class="h6 fw-bold text-gray-800">Requests List</p>
+												<p class="tcgray">All</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col">
+												<table class="display" id="table-request">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Title</th>
+															<th>Status</th>
+															<th>Problem / Request</th>
+															<th>Time</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>1</td>
+															<td>Update our email address</td>
+															<td><span class="badge rounded-pill text-bg-warning px-3">PENDING</span></td>
+															<td>cscurugciherang@gmail.com to cs1curugciherang...</td>
+															<td class="tcgray">Send at 23/05/22 04:32 PM</td>
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>Update our address</td>
+															<td><span class="badge rounded-pill text-bg-success px-3">DONE</span></td>
+															<td>Sirnajaya, Wargajaya, Kec. Sukamakmur, Kab...</td>
+															<td class="tcgray">Send at 19/05/22 01:32 PM</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -222,11 +246,11 @@
 		</a>
 
 		<!-- Bootstrap core JavaScript-->
-		<script src="dist/vendor/jquery/jquery.min.js"></script>
-		<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- <script src="vendor/jquery/jquery.min.js"></script> -->
+		<script src="dist/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 		<!-- Jquery 3.6.0 -->
-		<!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 		<!-- Core plugin JavaScript-->
 		<script src="dist/vendor/jquery-easing/jquery.easing.min.js"></script>

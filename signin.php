@@ -31,26 +31,25 @@
 								<div class="mb-4">
 									<div class="d-flex justify-content-between align-items-baseline">
 										<label for="password" class="form-label fw-bolder tcgray">PASSWORD</label>
-										<a href="forgot-password.html" class="text-decoration-none tcgray fs8">Forgot Password?</a>
+										<a href="forgot-password.php" class="text-decoration-none tcgray fs8">Forgot Password?</a>
 									</div>
 									<input type="password" name="password" id="password" class="form-control p-3" placeholder="Type your password" required />
 								</div>
 								<div class="d-grid gap-2">
 									<button type="submit" class="btn btn-primary p-3" name="signin">Sign in</button>
 								</div>
-								<p class="mt-3 text-center tcgray">Don't have account? <a href="signup.html" class="text-decoration-none">Sign Up</a></p>
+								<p class="mt-3 text-center tcgray">Don't have account? <a href="signup.php" class="text-decoration-none">Sign Up</a></p>
 							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		<script>
-			$(document).ready(function () {
-				$(".preloader").fadeOut();
-			});
-		</script>
+		
+		<!-- My JS Configuration -->
+		<script src="dist/js/main.js"></script>
 	</body>
 </html>

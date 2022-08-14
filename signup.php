@@ -8,6 +8,11 @@
 		<link rel="stylesheet" href="dist/css/style.css" />
 	</head>
 	<body>
+		<div class="preloader">
+			<div class="loading">
+				<img src="dist/img/load.svg" width="80" />
+			</div>
+		</div>
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-sm-8 col-md-6 col-lg-6">
@@ -60,17 +65,22 @@
 								<div class="d-grid gap-2">
 									<button type="submit" class="btn btn-primary p-3" name="signup">Sign Up</button>
 								</div>
-								<p class="mt-3 text-center tcgray">Have an account? <a href="signin.html" class="text-decoration-none">Sign In</a></p>
+								<p class="mt-3 text-center tcgray">Have an account? <a href="signin.php" class="text-decoration-none">Sign In</a></p>
 							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+		<!-- My JS Configuration -->
+		<script src="dist/js/main.js"></script>
+
 		<script>
+			// Sign Up Function
 			$(document).ready(function () {
 				$(':input[type="submit"]').prop("disabled", true);
 
@@ -84,6 +94,7 @@
 					}
 				});
 			});
+
 		</script>
 	</body>
 </html>

@@ -32,7 +32,7 @@
 		<div class="preloader">
 			<div class="loading">
 				<img src="dist/img/load.svg" width="80">
-				<p>Harap Tunggu</p>
+				<p>Loading</p>
 			</div>
 		</div>
 
@@ -82,21 +82,21 @@
 
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="profile.php">
+					<a class="nav-link" href="profiles.php">
 						<i class="fa-solid fa-circle-user ml-3 mr-2"></i>
-						<span>Profile</span></a
+						<span>Profiles</span></a
 					>
 				</li>
 
 				<!-- Divider -->
 				<hr class="sidebar-divider d-none d-md-block mt-3 mb-3" />
-				
+
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#">
+					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
 						<i class="fa-solid fa-right-from-bracket ml-3 mr-2"></i>
-						<span>Sign Out</span></a
-					>
+						<span>Sign Out</span>
+					</a>
 				</li>
 
 				<!-- Divider -->
@@ -117,6 +117,12 @@
 					<!-- Begin Page Content -->
 					<div class="container-fluid mt-4">
 						<!-- Page Heading -->
+						<nav aria-label="breadcrumb" class="mb-4">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">BinTracker</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Overview</li>
+							</ol>
+						</nav>
 						<h1 class="h4 mb-4 fw-bold text-gray-800">Overview - Wisata Curug Ciherang Sukamakmur</h1>
 
 						<div class="row">
@@ -306,19 +312,6 @@
 													</div>
 												</div>
 											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
 											
 											
 										</ul>
@@ -353,25 +346,6 @@
 			<i class="fas fa-angle-up"></i>
 		</a>
 
-		<!-- Logout Modal-->
-		<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-						<a class="btn btn-primary" href="#">Logout</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<!-- Bootstrap core JavaScript-->
 		<script src="dist/vendor/jquery/jquery.min.js"></script>
 		<script src="dist/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -387,6 +361,9 @@
 
 		<!-- Chart.js -->
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+		<!-- CDN SweetAlert -->
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 		<!-- My JS Configuration -->
 		<script src="dist/js/main.js"></script>

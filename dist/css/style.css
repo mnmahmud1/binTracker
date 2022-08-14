@@ -67,9 +67,24 @@ body {
 	color: #c8c8c8;
 }
 
-::placeholder {
-	/* Most modern browsers support this now. */
-	color: #909;
+input:-moz-read-only {
+	color: #c8c8c8;
+	background-color: #f0f1f7 !important;
+}
+
+input:read-only {
+	color: #c8c8c8;
+	background-color: #f0f1f7 !important;
+}
+
+textarea:-moz-read-only {
+	color: #c8c8c8;
+	background-color: #f0f1f7 !important;
+}
+
+textarea:read-only {
+	color: #c8c8c8;
+	background-color: #f0f1f7 !important;
 }
 
 .bg-dark {
@@ -80,4 +95,8 @@ body {
 	background-color: #9fa2b422;
 	border-left: 1px solid #dde2ff;
 	color: #dde2ff;
+}
+
+#map {
+	height: 325px;
 }
