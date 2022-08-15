@@ -196,7 +196,7 @@
 												<br>
 												<span class="fs8 tcgray">All</span>
 											</h6>
-											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='#'">View All</a>
+											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='devices-production.php'">View All</a>
 										</div>
 
 										<ul class="list-group list-group-flush">
@@ -242,7 +242,7 @@
 												Requests <br>
 												<span class="fs8 tcgray">Today</span>
 											</h6>
-											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='#'">View All</a>
+											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='requests.php'">View All</a>
 										</div>
 										
 										<ul class="list-group list-group-flush">

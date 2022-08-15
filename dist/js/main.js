@@ -10,6 +10,18 @@ $(document).ready(function () {
 	$("#table-request").DataTable();
 });
 
+$(document).ready(function () {
+	$("#table-adoption-history").DataTable();
+});
+
+$(document).ready(function () {
+	$("#table-history-checking").DataTable();
+});
+
+$(document).ready(function () {
+	$("#table-registered-agency").DataTable();
+});
+
 // Autofocus on modal bootstrap
 $(".modal").on("shown.bs.modal", function () {
 	$(this).find("[autofocus]").focus();

@@ -212,9 +212,9 @@
 														</button>
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="#">Details</a></li>
-															<li><a class="dropdown-item" href="#">Transfer</a></li>
-															<li><a class="dropdown-item" href="#">Disconnect</a></li>
+															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
+															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -236,9 +236,9 @@
 														</button>
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="#">Details</a></li>
-															<li><a class="dropdown-item" href="#">Transfer</a></li>
-															<li><a class="dropdown-item" href="#">Disconnect</a></li>
+															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
+															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -260,9 +260,9 @@
 														</button>
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="#">Details</a></li>
-															<li><a class="dropdown-item" href="#">Transfer</a></li>
-															<li><a class="dropdown-item" href="#">Disconnect</a></li>
+															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
+															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -284,9 +284,9 @@
 														</button>
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="#">Details</a></li>
-															<li><a class="dropdown-item" href="#">Transfer</a></li>
-															<li><a class="dropdown-item" href="#">Disconnect</a></li>
+															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
+															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -308,9 +308,9 @@
 														</button>
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="#">Details</a></li>
-															<li><a class="dropdown-item" href="#">Transfer</a></li>
-															<li><a class="dropdown-item" href="#">Disconnect</a></li>
+															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
+															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -365,6 +365,46 @@
 						<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-primary">Connect</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Transfer Device #2 -->
+		<div class="modal fade" id="transferDevice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="transferDeviceLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form action="" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="transferDeviceLabel">Transfer Device</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col">
+									<label for="startAgency" class="form-label fw-bolder text-gray-800">From</label>
+									<input type="text" name="startAgency" id="startAgency" class="form-control" value="Kebun Raya Cibodas" readonly />
+								</div>
+								<div class="col-1 d-flex align-items-center">
+									<i class="fa-solid fa-arrow-right-long"></i>
+								</div>
+								<div class="col">
+									<label for="endAgency" class="form-label fw-bolder text-gray-800">To</label>
+									<input name="endAgency" id="endAgency" list="datalistAgency" class="form-select" placeholder="Live search agency" required />
+									<datalist id="datalistAgency">
+										<option value="Kebun Raya Cibodas"></option>
+										<option value="PT. Artaboga Semesta"></option>
+										<option value="Seattle"></option>
+										<option value="Los Angeles"></option>
+										<option value="Chicago"></option>
+									</datalist>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+							<button type="submit" name="transferDevice" class="btn btn-primary">Transfer</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

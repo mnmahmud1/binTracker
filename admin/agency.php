@@ -136,13 +136,12 @@
 											<div class="col text-end">
 												<!-- BTN Modal Pair #1 -->
 												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-													<i class="fa-solid fa-link"></i>
-													Pair New Device
+													Add New Agency
 												</button>
 											</div>
 										</div>
 
-										<table class="display" id="table-device">
+										<table class="display" id="table-registered-agency">
 											<thead>
 												<tr>
 													<th>#</th>
@@ -170,7 +169,7 @@
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
 															<li><a class="dropdown-item" href="details-agency.php">Details</a></li>
-															<li><a class="dropdown-item" href="#">Delete</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteAgency">Delete</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -190,7 +189,7 @@
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
 															<li><a class="dropdown-item" href="details-agency.php">Details</a></li>
-															<li><a class="dropdown-item" href="#">Delete</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteAgency">Delete</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -210,7 +209,7 @@
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
 															<li><a class="dropdown-item" href="details-agency.php">Details</a></li>
-															<li><a class="dropdown-item" href="#">Delete</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteAgency">Delete</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -230,7 +229,7 @@
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
 															<li><a class="dropdown-item" href="details-agency.php">Details</a></li>
-															<li><a class="dropdown-item" href="#">Delete</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteAgency">Delete</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -250,7 +249,7 @@
 														<ul class="dropdown-menu">
 															<!-- Dropdown menu links -->
 															<li><a class="dropdown-item" href="details-agency.php">Details</a></li>
-															<li><a class="dropdown-item" href="#">Delete</a></li>
+															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteAgency">Delete</button></li>
 														</ul>
 													</td>
 												</tr>
@@ -289,7 +288,7 @@
 			<i class="fas fa-angle-up"></i>
 		</a>
 
-		<!-- Modal Pair #1 -->
+		<!-- Modal Add Agency #1 -->
 		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
@@ -305,6 +304,28 @@
 						<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-primary">Submit</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Delete Agency #2 -->
+		<div class="modal fade" id="deleteAgency" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteAgencyLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form action="" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="deleteAgencyLabel">Are you absolutely sure?</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<p>Please type <span class="fw-bold" id="nameAgency">mnmahmud1/calcMath</span> to confirm.</p>
+							<input type="text" name="typeAgency" id="typeAgency" class="form-control border-danger" placeholder="Enter your 6 digit device unique code" autofocus autocomplete="off" required />
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+							<button type="submit" name="deleteAgency" id="deleteAgency" class="btn btn-outline-danger">Delete this agency</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -333,5 +354,22 @@
 
 		<!-- My JS Configuration -->
 		<script src="../dist/js/main.js"></script>
+
+		<script>
+			// Sign Up Function
+			$(document).ready(function () {
+				$(':input[type="submit"]').prop('disabled', true);
+
+				$('#nameAgency, #typeAgency').keyup(function () {
+					if ($('#nameAgency').text() == '' && $('#typeAgency').val() == '') {
+						$(':input[type="submit"]').prop('disabled', true);
+					} else if ($('#nameAgency').text() == $('#typeAgency').val()) {
+						$(':input[type="submit"]').prop('disabled', false);
+					} else {
+						$(':input[type="submit"]').prop('disabled', true);
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
