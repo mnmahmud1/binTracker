@@ -359,12 +359,18 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<label for="code" class="form-label fw-bolder text-gray-800">Unique Code</label>
-							<input type="text" name="code" id="code" class="form-control" maxlength="6" placeholder="Enter your 6 digit device unique code" autofocus required />
+							<div class="mb-3">
+								<label for="code" class="form-label fw-bolder text-gray-800">Unique Code</label>
+								<input type="text" name="code" id="code" class="form-control" maxlength="6" placeholder="Enter your 6 digit device unique code" autofocus required />
+							</div>
+							<div class="mb-3">
+								<label for="deskripsi" class="form-label">Description</label>
+								<textarea name="deskripsi" id="deskripsi" class="form-control" placeholder="Perangkat ada di dekat minimarket" required></textarea>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-							<button type="submit" name="pairDevice" class="btn btn-primary">Submit</button>
+							<button type="submit" name="pairDevice" class="btn btn-primary">Connect</button>
 						</div>
 					</form>
 				</div>

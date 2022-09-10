@@ -16,7 +16,7 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-sm-8 col-md-6 col-lg-6">
-					<div class="card shadow border-0 py-2 px-2 mt-5">
+					<div class="card shadow border-0 py-2 px-2 mt-5 mb-5">
 						<div class="card-body">
 							<div class="text-center mb-4">
 								<h4 class="fw-bold">Sign Up to BinTracker</h4>
@@ -45,7 +45,7 @@
 									</div>
 									<div class="col-sm-6 mb-4">
 										<label for="phone" class="form-label fw-bolder tcgray">PHONE</label>
-										<input type="tel" name="phone" id="phone" class="form-control p-3" placeholder="Your agency phone" required />
+										<input type="tel" name="phone" id="phone" class="form-control p-3" placeholder="Your agency phone" maxlength="13" required />
 									</div>
 								</div>
 								<div class="row">

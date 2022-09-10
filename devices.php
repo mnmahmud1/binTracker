@@ -273,7 +273,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Submit</button>
+						<button type="button" class="btn btn-primary">Pair</button>
 					</div>
 				</div>
 			</div>
