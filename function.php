@@ -18,7 +18,7 @@
         }
 
         //! if login is fail give cookie and page detect alert from cookie
-        setcookie("log", "failed", time() + 5, "/");
+        setcookie("signin", "failed", time() + 5, "/");
         header("Location: signin.php");
     }
 
@@ -45,7 +45,7 @@
             mysqli_query($conn, "INSERT INTO users (name, bussines, address, email, tel, username, password) VALUES('$name', '$bussines', '$address', '$email', '$tel', '$username', '$hash')");
             if(mysqli_affected_rows($conn) > 0){
                 setcookie("reg", "success", time() + 5, "/");
-                exit(header('Location: signin.php'));
+                header('Location: signin.php');
             }
             //! if sign up is fail to insert to databases
             setcookie("reg", "failed", time() + 5, "/");
@@ -84,3 +84,26 @@
         setcookie("updatePass", "failedNotMatch", time() + 5, "/");
         header('Location: profiles.php');
     }
+
+    if(isset($_POST["sendRequest"])){
+        $title = trim(htmlspecialchars($_POST['title']));
+        $request = trim(htmlspecialchars($_POST['request']));
+        $username = $_COOKIE['signin'];
+
+        //! Check ID User
+        $checkID = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM users WHERE username = '$username'"));
+        $ID = $checkID['id'];
+
+        mysqli_query($conn, "INSERT INTO requests (title, message, id_user, status) VALUES ('$title', '$request', $ID, 0)");
+        
+        if(mysqli_affected_rows($conn)){
+            //! if insert was successful
+            setcookie("addRequest", "success", time() + 5, "/");
+            header('Location: request.php');
+        } else {
+            //! if insert failed
+            setcookie("addRequest", "failed", time() + 5, "/");
+            header('Location: request.php');
+        }
+    }
+

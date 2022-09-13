@@ -82,20 +82,12 @@
 					>
 				</li>
 
-				<!-- Nav Item  -->
-				<li class="nav-item">
-					<a class="nav-link" href="" data-bs-toggle="modal" data-bs-target="#changePassword">
-						<i class="fa-solid fa-key ml-3 mr-2"></i>
-						<span>Change Password</span></a
-					>
-				</li>
-
 				<!-- Divider -->
 				<hr class="sidebar-divider d-none d-md-block mt-3 mb-3" />
 
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
+					<a class="nav-link" href="#" onclick="return alertModal('function.php?signout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
 						<i class="fa-solid fa-right-from-bracket ml-3 mr-2"></i>
 						<span>Sign Out</span>
 					</a>
@@ -512,39 +504,6 @@
 			</div>
 		</div>
 
-		<!-- Modal Change Password Admin #4 -->
-		<div class="modal fade" id="changePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="changePasswordLabel">Update admin password</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<form action="" method="post">
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="oldPasswordAdmin" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>
-								<input type="password" name="oldPasswordAdmin" id="oldPasswordAdmin" class="form-control p-3" placeholder="Enter old password" autofocus required />
-							</div>
-							<hr />
-							<div class="mb-3">
-								<label for="newPasswordAdmin" class="form-label fw-bolder text-gray-800">NEW PASSWORD</label>
-								<input type="password" name="newPasswordAdmin" id="newPasswordAdmin" class="form-control p-3" placeholder="Enter new password" required />
-							</div>
-							<div class="mb-3">
-								<label for="repeatPasswordAdmin" class="form-label fw-bolder text-gray-800">REPEAT PASSWORD</label>
-								<input type="password" name="repeatPasswordAdmin" id="repeatPasswordAdmin" class="form-control p-3" placeholder="Repat new password" required />
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-							<button type="submit" name="updatePassAdmin" id="updatePassAdmin" class="btn btn-primary">Update Password</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
 		<!-- Bootstrap core JavaScript-->
 		<!-- <script src="vendor/jquery/jquery.min.js"></script> -->
 		<script src="../dist/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -582,21 +541,6 @@
 						$(':input[type="submit"]').prop("disabled", false);
 					} else {
 						$("#updatePass").prop("disabled", true);
-					}
-				});
-			});
-
-			// Change password Admin
-			$(document).ready(function () {
-				$("#updatePassAdmin").prop("disabled", true);
-
-				$("#newPasswordAdmin, #repeatPasswordAdmin").keyup(function () {
-					if ($("#newPasswordAdmin").val() == "" && $("#repeatPasswordAdmin").val() == "") {
-						$(':input[type="submit"]').prop("disabled", true);
-					} else if ($("#newPasswordAdmin").val() == $("#repeatPasswordAdmin").val()) {
-						$(':input[type="submit"]').prop("disabled", false);
-					} else {
-						$("#updatePassAdmin").prop("disabled", true);
 					}
 				});
 			});

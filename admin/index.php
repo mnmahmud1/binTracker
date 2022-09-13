@@ -1,3 +1,9 @@
+<?php
+	if(!isset($_COOKIE['signinAdmin'])){
+		header('Location: signin.php');
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -35,6 +41,56 @@
 				<p>Loading</p>
 			</div>
 		</div>
+
+		<?php if(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failedNotMatch") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password, Input password not match!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
 
 		<!-- Page Wrapper -->
 		<div id="wrapper">
@@ -93,7 +149,7 @@
 
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
+					<a class="nav-link" href="#" onclick="return alertModal('function.php?signout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
 						<i class="fa-solid fa-right-from-bracket ml-3 mr-2"></i>
 						<span>Sign Out</span>
 					</a>
@@ -352,7 +408,7 @@
 						<h5 class="modal-title" id="changePasswordLabel">Update admin password</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<form action="" method="post">
+					<form action="function.php" method="post">
 						<div class="modal-body">
 							<div class="mb-3">
 								<label for="oldPasswordAdmin" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>

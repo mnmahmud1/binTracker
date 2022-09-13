@@ -9,6 +9,9 @@
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
+	$ID = convertUsernameToID($username);
+	$callRequest = mysqli_query($conn, "SELECT title, message, status, created_at FROM requests WHERE id_user = $ID");
+
 
 ?>
 
@@ -52,12 +55,46 @@
 			</div>
 		</div>
 
+		<?php if(isset($_COOKIE["addRequest"]) && $_COOKIE["addRequest"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> send your request!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["addRequest"]) && $_COOKIE["addRequest"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to send your request!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
 		<!-- Page Wrapper -->
 		<div id="wrapper">
 			<!-- Sidebar -->
 			<ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 				<!-- Sidebar - Brand -->
-				<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+				<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
 					<div class="sidebar-brand-icon rotate-n-15">
 						<i class="fa-solid fa-b"></i>
 					</div>
@@ -151,18 +188,18 @@
 											</div>
 										</div>
 
-										<form action="" method="post">
+										<form action="function.php" method="post">
 											<div class="row mt-2">
 												<div class="col">
 													<div class="mb-3">
 														<label for="title" class="form-label fw-bolder text-gray-800">TITLE</label>
-														<input type="text" name="title" id="title" class="form-control py-4" placeholder="Your title request" required />
+														<input type="text" name="title" id="title" class="form-control py-4" placeholder="Your title request" maxlength="100" required />
 													</div>
 												</div>
 												<div class="col">
 													<div class="mb-3">
 														<label for="agency-name" class="form-label fw-bolder text-gray-800">AGENCY NAME</label>
-														<input type="text" name="agency-name" id="agency-name" class="form-control py-4" value="Wisata Curug Ciherang Sukamakmur" readonly />
+														<input type="text" name="agency-name" id="agency-name" class="form-control py-4" value="<?= $checkName['name'] ?>" readonly />
 													</div>
 												</div>
 											</div>
@@ -170,7 +207,7 @@
 											<div class="row">
 												<div class="col">
 													<label for="request" class="form-label fw-bolder text-gray-800">REQUEST / PROBLEM</label>
-													<textarea type="text" name="request" id="request" class="form-control py-4" placeholder="Your Request" required></textarea>
+													<textarea name="request" id="request" class="form-control py-4" placeholder="Your Request" required></textarea>
 												</div>
 											</div>
 
@@ -204,24 +241,24 @@
 															<th>Title</th>
 															<th>Status</th>
 															<th>Problem / Request</th>
-															<th>Time</th>
+															<th>Send at</th>
 														</tr>
 													</thead>
 													<tbody>
+														<?php $i=1; foreach ($callRequest as $request) :?>
 														<tr>
-															<td>1</td>
-															<td>Update our email address</td>
-															<td><span class="badge rounded-pill text-bg-warning px-3">PENDING</span></td>
-															<td>cscurugciherang@gmail.com to cs1curugciherang...</td>
-															<td class="tcgray">Send at 23/05/22 04:32 PM</td>
+															<td><?= $i ?></td>
+															<td><?= $request['title'] ?></td>
+															<?php if($request['status'] == 0) : ?>
+																<td><span class="badge rounded-pill text-bg-warning px-3">PENDING</span></td>
+															<?php elseif($request['status'] == 1) : ?>
+																<td><span class="badge rounded-pill text-bg-success px-3">DONE</span></td>
+															<?php endif ?>
+															<td><?= $request['message']?></td>
+															<td class="tcgray"><?= $request['created_at'] ?></td>
 														</tr>
-														<tr>
-															<td>2</td>
-															<td>Update our address</td>
-															<td><span class="badge rounded-pill text-bg-success px-3">DONE</span></td>
-															<td>Sirnajaya, Wargajaya, Kec. Sukamakmur, Kab...</td>
-															<td class="tcgray">Send at 19/05/22 01:32 PM</td>
-														</tr>
+															<?php $i++ ?>
+														<?php endforeach ?>
 													</tbody>
 												</table>
 											</div>

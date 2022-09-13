@@ -1,6 +1,6 @@
 <?php
 	
-	if(isset($_COOKIE["signin"])) {
+	if(isset($_COOKIE["signinAdmin"])) {
 		header("Location: index.php");
 	}
 	
@@ -14,12 +14,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Sign In - BinTracker</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
-		<link rel="stylesheet" href="dist/css/style.css" />
+		<link rel="stylesheet" href="../dist/css/style.css" />
 	</head>
 	<body>
 		<div class="preloader">
 			<div class="loading">
-				<img src="dist/img/load.svg" width="80" />
+				<img src="../dist/img/load.svg" width="80" />
 			</div>
 		</div>
 
@@ -35,23 +35,6 @@
 						</div>
 						<div class="toast-body">
 							Wrong username or password!
-						</div>
-					</div>
-				</div>
-			</div>
-
-		<?php elseif(isset($_COOKIE["reg"]) && $_COOKIE["reg"] == "success") :  ?>
-			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
-				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
-					<div class="toast fade show">
-						<div class="toast-header">
-							<i class="fas fa-info-circle me-2"></i>
-							<strong class="me-auto">Attention!</strong>
-							<small>Just Now</small>
-							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-						</div>
-						<div class="toast-body">
-							Successfully registered, sign in now!
 						</div>
 					</div>
 				</div>
@@ -74,16 +57,13 @@
 									<input type="text" name="username" id="username" class="form-control p-3" placeholder="Type your username" maxlength="20" autofocus required />
 								</div>
 								<div class="mb-4">
-									<div class="d-flex justify-content-between align-items-baseline">
-										<label for="password" class="form-label fw-bolder tcgray">PASSWORD</label>
-										<a href="forgot-password.php" class="text-decoration-none tcgray fs8" tabindex="1">Forgot Password?</a>
-									</div>
+                                    <label for="password" class="form-label fw-bolder tcgray">PASSWORD</label>
 									<input type="password" name="password" id="password" class="form-control p-3" placeholder="Type your password" required />
 								</div>
 								<div class="d-grid gap-2">
-									<button type="submit" class="btn btn-primary p-3" name="signin">Sign in</button>
+									<button type="submit" class="btn btn-primary p-3" name="signinAdmin">Sign in</button>
 								</div>
-								<p class="mt-3 text-center tcgray">Don't have account? <a href="signup.php" class="text-decoration-none">Sign Up</a></p>
+								<p class="mt-3 text-center tcgray">Back to agency sign in? <a href="../signin.php" class="text-decoration-none">Agency Sign In</a></p>
 							</form>
 						</div>
 					</div>
@@ -95,6 +75,6 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		
 		<!-- My JS Configuration -->
-		<script src="dist/js/main.js"></script>
+		<script src="../dist/js/main.js"></script>
 	</body>
 </html>
