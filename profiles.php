@@ -1,3 +1,17 @@
+<?php
+
+	if(!isset($_COOKIE["signin"])) {
+		header("Location: signin.php");
+	}
+
+	require 'conn.php';
+	
+	$username = $_COOKIE["signin"];
+	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name, bussines, address, tel, email, username FROM users WHERE username = '$username'"));
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -37,6 +51,56 @@
 				<p>Loading</p>
 			</div>
 		</div>
+
+		<?php if(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failedNotMatch") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password, Input password not match!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
 
 		<!-- Page Wrapper -->
 		<div id="wrapper">
@@ -95,7 +159,7 @@
 
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
+					<a class="nav-link" href="#" onclick="return alertModal('function.php?signout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
 						<i class="fa-solid fa-right-from-bracket ml-3 mr-2"></i>
 						<span>Sign Out</span>
 					</a>
@@ -123,7 +187,7 @@
 								<li class="breadcrumb-item active" aria-current="page">Profiles</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">Profiles - Wisata Curug Ciherang Sukamakmur</h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Profiles - <?= $checkName['name'] ?></h1>
 
 						<div class="row">
 							<div class="col">
@@ -140,28 +204,28 @@
 											<div class="col">
 												<div class="mb-4">
 													<label for="agency-name" class="form-label fw-bolder text-gray-800">AGENCY NAME</label>
-													<input type="text" name="agency-name" id="agency-name" class="form-control py-4" value="Wisata Curug Ciherang Sukamakmur" readonly />
+													<input type="text" name="agency-name" id="agency-name" class="form-control py-4" value="<?= $checkName['name'] ?>" readonly />
 												</div>
 												<div class="mb-4">
 													<label for="bussines-field" class="form-label fw-bolder text-gray-800">BUSSINES FIELD</label>
-													<input type="text" name="bussines-field" id="bussines-field" class="form-control py-4" value="Natural Tourism" readonly />
+													<input type="text" name="bussines-field" id="bussines-field" class="form-control py-4" value="<?= $checkName['bussines'] ?>" readonly />
 												</div>
 											</div>
 											<div class="col">
 												<div class="mb-4">
 													<label for="email" class="form-label fw-bolder text-gray-800">EMAIL</label>
-													<input type="text" name="email" id="email" class="form-control py-4" value="cscurugciherang@gmail.com" readonly />
+													<input type="text" name="email" id="email" class="form-control py-4" value="<?= $checkName['email'] ?>" readonly />
 												</div>
 												<div class="mb-4">
 													<label for="phone" class="form-label fw-bolder text-gray-800">PHONE</label>
-													<input type="text" name="phone" id="phone" class="form-control py-4" value="0212343234" readonly />
+													<input type="text" name="phone" id="phone" class="form-control py-4" value="<?= $checkName['tel'] ?>" readonly />
 												</div>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col">
 												<label for="address" class="form-label fw-bolder text-gray-800">ADDRESS</label>
-												<textarea class="form-control py-4" name="address" id="address" readonly>Sirnajaya, Wargajaya, Kec. Sukamakmur, Kabupaten Bogor, Jawa Barat 16830</textarea>
+												<textarea class="form-control py-4" name="address" id="address" readonly><?= $checkName['address'] ?></textarea>
 											</div>
 										</div>
 
@@ -172,7 +236,7 @@
 										<div class="row mt-2 align-items-end">
 											<div class="col">
 												<label for="username" class="form-label fw-bolder text-gray-800">USERNAME</label>
-												<input type="text" name="username" id="username" class="form-control py-4" value="csciherang" readonly />
+												<input type="text" name="username" id="username" class="form-control py-4" value="<?= $checkName['username'] ?>" readonly />
 											</div>
 											<div class="col">
 												<!-- Button Trigger Modal -->
@@ -224,7 +288,7 @@
 						<h5 class="modal-title" id="updatePasswordLabel">Renew Password</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<form action="" method="post">
+					<form action="function.php" method="post">
 						<div class="modal-body">
 								<div class="mb-3">
 									<label for="oldPassword" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>
@@ -241,7 +305,7 @@
 								</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal" tabindex="1">Close</button>
 							<button type="submit" name="updatePass" id="updatePass" class="btn btn-primary">Update Password</button>
 						</div>
 					</form>

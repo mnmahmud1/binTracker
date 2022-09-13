@@ -53,3 +53,7 @@ $(function () {
 		this.value = this.value.toLocaleUpperCase();
 	});
 });
+
+$(document).ready(function () {
+	$(".toast").delay(5000).fadeOut();
+});

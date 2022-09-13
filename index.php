@@ -1,3 +1,16 @@
+<?php
+
+	if(!isset($_COOKIE["signin"])) {
+		header("Location: signin.php");
+	}
+
+	require 'conn.php';
+	
+	$username = $_COOKIE["signin"];
+	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -93,7 +106,7 @@
 
 				<!-- Nav Item  -->
 				<li class="nav-item">
-					<a class="nav-link" href="#" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
+					<a class="nav-link" href="#" onclick="return alertModal('function.php?signout=1', 'Sign Out', 'If you sign out maybe any data cant be saved!')">
 						<i class="fa-solid fa-right-from-bracket ml-3 mr-2"></i>
 						<span>Sign Out</span>
 					</a>
@@ -123,7 +136,7 @@
 								<li class="breadcrumb-item active" aria-current="page">Overview</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">Overview - Wisata Curug Ciherang Sukamakmur</h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Overview - <?= $checkName['name'] ?></h1>
 
 						<div class="row">
 							<!-- Devices -->

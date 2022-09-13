@@ -1,3 +1,12 @@
+<?php
+	
+	if(isset($_COOKIE["signin"])) {
+		header("Location: index.php");
+	}
+	
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -13,6 +22,42 @@
 				<img src="dist/img/load.svg" width="80" />
 			</div>
 		</div>
+
+		<?php if(isset($_COOKIE["log"]) && $_COOKIE["log"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-exclamation-circle me-2"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							Wrong username or password!
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<?php elseif(isset($_COOKIE["reg"]) && $_COOKIE["reg"] == "success") :  ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle me-2"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							Successfully registered, sign in now!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-sm-8 col-md-4 col-lg-4">
@@ -23,15 +68,15 @@
 								<span class="tcgray">Sign in to start your session</span>
 							</div>
 
-							<form action="#" method="POST">
+							<form action="function.php" method="POST">
 								<div class="mb-4">
 									<label for="username" class="form-label fw-bolder tcgray">USERNAME <span class="t400">OR</span> EMAIL</label>
-									<input type="text" name="username" id="username" class="form-control p-3" placeholder="Type your username" maxlength="30" autofocus required />
+									<input type="text" name="username" id="username" class="form-control p-3" placeholder="Type your username" maxlength="20" autofocus required />
 								</div>
 								<div class="mb-4">
 									<div class="d-flex justify-content-between align-items-baseline">
 										<label for="password" class="form-label fw-bolder tcgray">PASSWORD</label>
-										<a href="forgot-password.php" class="text-decoration-none tcgray fs8">Forgot Password?</a>
+										<a href="forgot-password.php" class="text-decoration-none tcgray fs8" tabindex="1">Forgot Password?</a>
 									</div>
 									<input type="password" name="password" id="password" class="form-control p-3" placeholder="Type your password" required />
 								</div>
