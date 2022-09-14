@@ -1,7 +1,9 @@
 <?php
+
 	if(!isset($_COOKIE['signinAdmin'])){
 		header('Location: signin.php');
 	}
+	
 ?>
 
 <!DOCTYPE html>

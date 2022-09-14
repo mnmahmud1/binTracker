@@ -49,7 +49,7 @@
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 						</div>
 						<div class="toast-body">
-							<strong>Failed</strong> to signup new user!
+							<strong>Failed</strong> to sign up new user!
 						</div>
 					</div>
 				</div>

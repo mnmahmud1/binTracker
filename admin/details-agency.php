@@ -1,3 +1,23 @@
+<?php
+
+	if(!isset($_COOKIE['signinAdmin'])){
+		header('Location: signin.php');
+	}
+
+	if(!isset($_COOKIE['user'])){
+		header('Location: agency.php');
+	}
+
+	require '../conn.php';
+	
+	$user = $_COOKIE['user'];
+	$callDetailAgency = mysqli_query($conn, "SELECT name, bussines, address, tel, email, username FROM users WHERE id = $user");
+	$DetailAgency = mysqli_fetch_assoc($callDetailAgency);
+
+	$callRequests = mysqli_query($conn, "SELECT * FROM requests WHERE id_user = $user");
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -37,6 +57,90 @@
 				<p>Loading</p>
 			</div>
 		</div>
+
+		<?php if(isset($_COOKIE["updateProfil"]) && $_COOKIE["updateProfil"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> update profile.
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updateProfil"]) && $_COOKIE["updateProfil"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> update profile.
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
+		<?php if(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "failedNotMatch") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> to update your password, Input password not match!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["updatePass"]) && $_COOKIE["updatePass"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> update your password!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
 
 		<!-- Page Wrapper -->
 		<div id="wrapper">
@@ -116,7 +220,7 @@
 								<li class="breadcrumb-item active" aria-current="page">Details</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - Wisata Curug Ciherang Sukamakmur</h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - <?= $DetailAgency['name'] ?></h1>
 
 						<div class="row">
 							<div class="col">
@@ -129,33 +233,33 @@
 											</div>
 										</div>
 
-										<form action="" method="post">
+										<form action="function.php" method="post">
 											<div class="row mt-2">
 												<div class="col">
 													<div class="mb-4">
-														<label for="agency-name" class="form-label fw-bolder text-gray-800">AGENCY NAME</label>
-														<input type="text" name="agency-name" id="agency-name" class="form-control" value="Wisata Curug Ciherang Sukamakmur" />
+														<label for="name" class="form-label fw-bolder text-gray-800">AGENCY NAME</label>
+														<input type="text" name="name" id="name" class="form-control" value="<?= $DetailAgency['name'] ?>" maxlength="100" required />
 													</div>
 													<div class="mb-4">
-														<label for="bussines-field" class="form-label fw-bolder text-gray-800">BUSSINES FIELD</label>
-														<input type="text" name="bussines-field" id="bussines-field" class="form-control" value="Natural Tourism" />
+														<label for="bussines" class="form-label fw-bolder text-gray-800">BUSSINES FIELD</label>
+														<input type="text" name="bussines" id="bussines" class="form-control" value="<?= $DetailAgency['bussines'] ?>" maxlength="50" required />
 													</div>
 												</div>
 												<div class="col">
 													<div class="mb-4">
 														<label for="email" class="form-label fw-bolder text-gray-800">EMAIL</label>
-														<input type="text" name="email" id="email" class="form-control" value="cscurugciherang@gmail.com" />
+														<input type="text" name="email" id="email" class="form-control" value="<?= $DetailAgency['email'] ?>" maxlength="100" required />
 													</div>
 													<div class="mb-4">
-														<label for="phone" class="form-label fw-bolder text-gray-800">PHONE</label>
-														<input type="text" name="phone" id="phone" class="form-control" value="0212343234" />
+														<label for="tel" class="form-label fw-bolder text-gray-800">PHONE</label>
+														<input type="text" name="tel" id="tel" class="form-control" value="<?= $DetailAgency['tel'] ?>" maxlength="13" required />
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col">
 													<label for="address" class="form-label fw-bolder text-gray-800">ADDRESS</label>
-													<textarea class="form-control py-4" name="address" id="address">Sirnajaya, Wargajaya, Kec. Sukamakmur, Kabupaten Bogor, Jawa Barat 16830</textarea>
+													<textarea class="form-control py-4" name="address" id="address" required><?= $DetailAgency['address'] ?></textarea>
 												</div>
 											</div>
 											<div class="row mt-3 text-end">
@@ -169,11 +273,11 @@
 											<p class="tcgray">Agency Sign in information</p>
 										</div>
 
-										<form action="" method="post">
+										<form action="function.php" method="post">
 											<div class="row mt-2 align-items-end mb-3 gap-3">
 												<div class="col">
 													<label for="username" class="form-label fw-bolder text-gray-800">USERNAME</label>
-													<input type="text" name="username" id="username" class="form-control" value="csciherang" />
+													<input type="text" name="username" id="username" class="form-control" value="<?= $DetailAgency['username'] ?>" maxlength="20" required />
 												</div>
 												<div class="col">
 													<button type="submit" class="btn btn-primary me-3" name="updateUsernameAgency" id="updateUsernameAgency">Update Username</button>
@@ -203,35 +307,29 @@
 													<th>#</th>
 													<th style="width: 25%">Title</th>
 													<th style="width: 35%">Problem/Request</th>
-													<th>Time</th>
+													<th>Reported at</th>
 													<th>Response</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>
-														Update our email address <br />
-														<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
-													</td>
-													<td class="text-break">cscurugciherang@gmail.com to cs1curugciherang@gmail.com</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-success badge rounded-pill text-bg-success px-3" onclick="return window.location.href='#'">DONE</button>
-													</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>
-														Update our address <br />
-														<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
-													</td>
-													<td class="text-break">Sirnajaya, Wargajaya, Kec. Sukamakmur, Kabupaten Bogor, Jawa Barat 16830 to Sirnajaya, War...</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
-													</td>
-												</tr>
+												<?php $i=1; foreach ($callRequests as $request) : ?>
+													<tr>
+														<td><?= $i ?></td>
+														<td>
+															<?= $request['title'] ?><br />
+															<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
+														</td>
+														<td class="text-break"><?= $request['message'] ?></td>
+														<td class="tcgray"><?= $request['created_at'] ?></td>
+														<td>
+															<?php if($request['status'] == 1) : ?>
+																<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
+															<?php elseif($request['status'] == 0) : ?>
+																<button class="btn btn-success badge rounded-pill text-bg-success px-3" onclick="return window.location.href='function.php?updateStatusRequest=1&id=<?= $request['id'] ?>'">DONE</button>
+															<?php endif ?>
+														</td>
+													</tr>
+												<?php $i++ ; endforeach ?>
 											</tbody>
 										</table>
 									</div>
@@ -417,7 +515,7 @@
 						<h5 class="modal-title" id="updatePasswordLabel">Renew Password</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<form action="" method="post">
+					<form action="function.php" method="post">
 						<div class="modal-body">
 							<div class="mb-3">
 								<label for="oldPassword" class="form-label fw-bolder text-gray-800">OLD PASSWORD</label>
@@ -434,8 +532,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-							<button type="submit" name="updatePass" id="updatePass" class="btn btn-primary">Update Password</button>
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal" tabindex="1">Close</button>
+							<button type="submit" name="updatePassAgency" id="updatePassAgency" class="btn btn-primary">Update Password</button>
 						</div>
 					</form>
 				</div>

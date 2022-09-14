@@ -46,15 +46,16 @@
             if(mysqli_affected_rows($conn) > 0){
                 setcookie("reg", "success", time() + 5, "/");
                 header('Location: signin.php');
+            } else {
+                //! if sign up is fail to insert to databases
+                setcookie("reg", "failed", time() + 5, "/");
+                header('Location: signup.php');
             }
-            //! if sign up is fail to insert to databases
-            setcookie("reg", "failed", time() + 5, "/");
+        } else {
+            //! if sign up is fail give cookie and page detect alert from cookie
+            setcookie("reg", "failedUsername", time() + 5, "/");
             header('Location: signup.php');
         }
-
-        //! if sign up is fail give cookie and page detect alert from cookie
-        setcookie("reg", "failedUsername", time() + 5, "/");
-        header('Location: signup.php');
     }
 
     // Update Password /User
@@ -73,16 +74,16 @@
                 //! if update password was successful
                 setcookie("updatePass", "success", time() + 5, "/");
                 exit(header('Location: profiles.php'));
+            } else {
+                //! if update password was failed
+                setcookie("updatePass", "failed", time() + 5, "/");
+                header('Location: profiles.php');
             }
-            
-            //! if update password was failed
-            setcookie("updatePass", "failed", time() + 5, "/");
+        } else {
+            //! if old password not match with input old password
+            setcookie("updatePass", "failedNotMatch", time() + 5, "/");
             header('Location: profiles.php');
-            
         }
-        //! if old password not match with input old password
-        setcookie("updatePass", "failedNotMatch", time() + 5, "/");
-        header('Location: profiles.php');
     }
 
     if(isset($_POST["sendRequest"])){
