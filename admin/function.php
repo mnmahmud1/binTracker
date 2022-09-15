@@ -2,6 +2,8 @@
 
     require '../conn.php';
 
+    date_default_timezone_set("Asia/Jakarta");
+
     // Sign in Admin
     if(isset($_POST['signinAdmin'])){
         $username = trim(htmlspecialchars($_POST['username']));
@@ -66,12 +68,13 @@
         $tel = trim(htmlspecialchars($_POST['tel']));
         $username = trim(htmlspecialchars($_POST['username']));
         $password = trim($_POST['password']);
+        $created_at = date('Y-m-d H:i:s');
         
         $checkUser = mysqli_query($conn, "SELECT username FROM users WHERE username = '$username'");
         //! check any user use the username
         if(mysqli_num_rows($checkUser) == 0){
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            mysqli_query($conn, "INSERT INTO users (name, bussines, address, email, tel, username, password) VALUES('$name', '$bussines', '$address', '$email', '$tel', '$username', '$hash')");
+            mysqli_query($conn, "INSERT INTO users (name, bussines, address, email, tel, username, password, created_at) VALUES('$name', '$bussines', '$address', '$email', '$tel', '$username', '$hash', '$created_at')");
             if(mysqli_affected_rows($conn) > 0){
                 setcookie("reg", "success", time() + 5, "/");
                 header('Location: agency.php');
@@ -167,12 +170,22 @@
     }
 
 
-    // Change Status Requests
+    // Change Status Requests (details agency)
     if(isset($_GET["updateStatusRequest"])){
         $id = $_GET['id'];
         
-        mysqli_query($conn, "UPDATE requests SET status = 1 WHERE id_user = $id");
+        mysqli_query($conn, "UPDATE requests SET status = 1 WHERE id = $id");
         if(mysqli_affected_rows($conn)){
             header('Location: details-agency.php');
+        }
+    }
+
+    // Change Status Requests (requests)
+    if(isset($_GET["updateStatusRequestAdmin"])){
+        $id = $_GET['id'];
+        
+        mysqli_query($conn, "UPDATE requests SET status = 1 WHERE id = $id");
+        if(mysqli_affected_rows($conn)){
+            header('Location: requests.php');
         }
     }

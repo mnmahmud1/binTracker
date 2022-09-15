@@ -4,6 +4,10 @@
 		header('Location: signin.php');
 	}
 	
+	require '../conn.php';
+
+	$callRequests = mysqli_query($conn, "SELECT title, status, created_at FROM requests ORDER BY created_at DESC LIMIT 5");
+
 ?>
 
 <!DOCTYPE html>
@@ -298,78 +302,44 @@
 										<div class="p-3 d-flex justify-content-between align-items-baseline">
 											<h6 class="card-title fw-bold">
 												Requests <br>
-												<span class="fs8 tcgray">Today</span>
+												<span class="fs8 tcgray">All</span>
 											</h6>
 											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='requests.php'">View All</a>
 										</div>
 										
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col-7">
-														<span>Update our email address</span>
+											<?php foreach($callRequests as $request) : ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col-7">
+															<span><?= $request['title'] ?></span>
+														</div>
+														<div class="col text-start">
+															<span class="fs8 tcgray"><?= date('g:i A', strtotime($request['created_at']))?></span>
+														</div>
+														<div class="col text-end">
+															<?php if($request['status'] == 1) : ?>
+																<span class="badge rounded-pill text-bg-success px-3">DONE</span>
+															<?php elseif($request['status'] == 0) : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">PENDING</span>
+															<?php endif ?>
+														</div>
 													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
+												</li>
+											<?php endforeach ?>
+
+											<?php $num = mysqli_num_rows($callRequests) ; $rows = 5 - $num; ?>
+											<?php if($num < 5) : ?>
+												<?php for($i=1;$i<=$rows;$i++) : ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col-7">
+															<span>-</span>
+														</div>
 													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-warning px-3">PENDING</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col-7">
-														<span>Update our address</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-warning px-3">PENDING</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col-7">
-														<span>BUG : mail address login </span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">DONE</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col-7">
-														<span>Update agency name</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">DONE</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col-7">
-														<span>Change email address</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">DONE</span>
-													</div>
-												</div>
-											</li>
-											
+												</li>
+												<?php endfor ?>
+											<?php endif ?>
 										</ul>
 									</div>
 								</div>

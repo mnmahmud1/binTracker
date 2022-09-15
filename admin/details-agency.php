@@ -317,7 +317,7 @@
 														<td><?= $i ?></td>
 														<td>
 															<?= $request['title'] ?><br />
-															<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
+															<span class="fs8 tcgray"><?= $DetailAgency['name'] ?></span>
 														</td>
 														<td class="text-break"><?= $request['message'] ?></td>
 														<td class="tcgray"><?= $request['created_at'] ?></td>
@@ -575,7 +575,7 @@
 							<div class="row">
 								<div class="col">
 									<label for="startAgency" class="form-label fw-bolder text-gray-800">From</label>
-									<input type="text" name="startAgency" id="startAgency" class="form-control" value="Kebun Raya Cibodas" readonly />
+									<input type="text" name="startAgency" id="startAgency" class="form-control" value="<?= $DetailAgency['name'] ?>" readonly />
 								</div>
 								<div class="col-1 d-flex align-items-center">
 									<i class="fa-solid fa-arrow-right-long"></i>

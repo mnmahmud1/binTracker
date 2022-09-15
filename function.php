@@ -2,6 +2,8 @@
 
     require 'conn.php';
 
+    date_default_timezone_set("Asia/Jakarta");
+
     // Sign in
     if(isset($_POST['signin'])){
         $username = trim(htmlspecialchars($_POST['username']));
@@ -37,12 +39,13 @@
         $tel = trim(htmlspecialchars($_POST['tel']));
         $username = trim(htmlspecialchars($_POST['username']));
         $password = trim($_POST['password']);
+        $created_at = date('Y-m-d H:i:s');
         
         $checkUser = mysqli_query($conn, "SELECT username FROM users WHERE username = '$username'");
         //! check any user use the username
         if(mysqli_num_rows($checkUser) == 0){
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            mysqli_query($conn, "INSERT INTO users (name, bussines, address, email, tel, username, password) VALUES('$name', '$bussines', '$address', '$email', '$tel', '$username', '$hash')");
+            mysqli_query($conn, "INSERT INTO users (name, bussines, address, email, tel, username, password, created_at) VALUES('$name', '$bussines', '$address', '$email', '$tel', '$username', '$hash', '$created_at')");
             if(mysqli_affected_rows($conn) > 0){
                 setcookie("reg", "success", time() + 5, "/");
                 header('Location: signin.php');
@@ -90,12 +93,13 @@
         $title = trim(htmlspecialchars($_POST['title']));
         $request = trim(htmlspecialchars($_POST['request']));
         $username = $_COOKIE['signin'];
+        $created_at = date('Y-m-d H:i:s');
 
         //! Check ID User
         $checkID = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM users WHERE username = '$username'"));
         $ID = $checkID['id'];
 
-        mysqli_query($conn, "INSERT INTO requests (title, message, id_user, status) VALUES ('$title', '$request', $ID, 0)");
+        mysqli_query($conn, "INSERT INTO requests (title, message, id_user, status, created_at) VALUES ('$title', '$request', $ID, 0, '$created_at')");
         
         if(mysqli_affected_rows($conn)){
             //! if insert was successful

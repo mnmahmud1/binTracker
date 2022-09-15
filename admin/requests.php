@@ -4,6 +4,10 @@
 		header('Location: signin.php');
 	}
 	
+	require '../conn.php';
+
+	$callRequests = mysqli_query($conn, "SELECT requests.id, users.name, requests.message, requests.title, requests.created_at, requests.status FROM requests INNER JOIN users ON requests.id_user=users.id ORDER BY created_at DESC");
+
 ?>
 
 <!DOCTYPE html>
@@ -141,71 +145,29 @@
 													<th>#</th>
 													<th style="width: 25%">Title</th>
 													<th style="width: 35%">Problem/Request</th>
-													<th>Time</th>
+													<th>Reported at</th>
 													<th>Response</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>
-														Update our email address <br />
-														<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
-													</td>
-													<td class="text-break">cscurugciherang@gmail.com to cs1curugciherang@gmail.com</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-success badge rounded-pill text-bg-success px-3" onclick="return window.location.href='#'">DONE</button>
-													</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>
-														Update our address <br />
-														<span class="fs8 tcgray"> Wisata Curug Ciherang Sukamakmur </span>
-													</td>
-													<td class="text-break">Sirnajaya, Wargajaya, Kec. Sukamakmur, Kabupaten Bogor, Jawa Barat 16830 to Sirnajaya, War...</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-success badge rounded-pill text-bg-success px-3" onclick="return window.location.href='#'">DONE</button>
-													</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>
-														BUG : mail address login <br />
-														<span class="fs8 tcgray"> Kebun Raya Cibodas </span>
-													</td>
-													<td class="text-break">Bug dibagian tracker bin tong sampah</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
-													</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>
-														Update our Agency Name <br />
-														<span class="fs8 tcgray"> PT. Abadi Sejahtera Stel </span>
-													</td>
-													<td class="text-wrap">PT. Abadi Sejahtera Stel to PT. Abadi Sejahtera Steel</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
-													</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>
-														Update our username <br />
-														<span class="fs8 tcgray"> Taman Satwa Ragunan </span>
-													</td>
-													<td class="text-wrap">ragunansatwa to csragunansatwa</td>
-													<td class="tcgray">Reported at 23/05/22 04:32 PM</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
-													</td>
-												</tr>
+												<?php $i=1; foreach ($callRequests as $request) :?>
+													<tr>
+														<td><?= $i ?></td>
+														<td>
+															<?= $request['title'] ?><br />
+															<span class="fs8 tcgray"><?= $request['name'] ?></span>
+														</td>
+														<td class="text-break"><?= $request['message'] ?></td>
+														<td class="tcgray"><?= $request['created_at'] ?></td>
+														<td>
+															<?php if($request['status'] == 1) : ?>
+																<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>
+															<?php elseif($request['status'] == 0) : ?>
+																<button class="btn btn-success badge rounded-pill text-bg-success px-3" onclick="return window.location.href='function.php?updateStatusRequestAdmin=1&id=<?= $request['id'] ?>'">DONE</button>
+															<?php endif ?>
+														</td>
+													</tr>
+												<?php $i++; endforeach ?>
 											</tbody>
 										</table>
 									</div>
