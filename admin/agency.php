@@ -259,7 +259,7 @@
 															<ul class="dropdown-menu">
 																<!-- Dropdown menu links -->
 																<li><button class="dropdown-item" href="details-agency.php" onclick="urlCookie('user', '<?= $agency['id'] ?>', 1)">Details</button></li>
-																<li><button name="deleteButton" id="deleteButton"  class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteAgency" data-id="<?= $agency['id'] ?>" data-username="<?= $agency['username'] ?>">Delete</button></li>
+																<li><button name="deleteButton" id="deleteButton" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteAgency" data-id="<?= $agency['id'] ?>" data-username="<?= $agency['username'] ?>">Delete</button></li>
 															</ul>
 														</td>
 													</tr>

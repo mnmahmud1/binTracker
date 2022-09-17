@@ -3,6 +3,7 @@
     require '../conn.php';
 
     date_default_timezone_set("Asia/Jakarta");
+    $created_at = date('Y-m-d H:i:s');
 
     // Sign in Admin
     if(isset($_POST['signinAdmin'])){
@@ -68,7 +69,6 @@
         $tel = trim(htmlspecialchars($_POST['tel']));
         $username = trim(htmlspecialchars($_POST['username']));
         $password = trim($_POST['password']);
-        $created_at = date('Y-m-d H:i:s');
         
         $checkUser = mysqli_query($conn, "SELECT username FROM users WHERE username = '$username'");
         //! check any user use the username
@@ -187,5 +187,93 @@
         mysqli_query($conn, "UPDATE requests SET status = 1 WHERE id = $id");
         if(mysqli_affected_rows($conn)){
             header('Location: requests.php');
+        }
+    }
+
+    // Connect Devices /Admin
+    if(isset($_POST['connectDevice'])){
+        $code = trim(htmlspecialchars($_POST['code']));
+        $description = trim(htmlspecialchars($_POST['description']));
+
+        $checkCode = mysqli_query($conn, "SELECT id FROM devices WHERE code = '$code'");
+
+        if(mysqli_num_rows($checkCode) == 0){
+            mysqli_query($conn, "INSERT INTO devices (code, description, created_at) VALUES ('$code', '$description', '$created_at')");
+    
+            if(mysqli_affected_rows($conn)){
+                //! if insert device was successfull
+                setcookie("connectDevice", "success", time() + 5, "/");
+                header('Location: devices-production.php');
+            } else {
+                //! if insert device was failed
+                setcookie("connectDevice", "failed", time() + 5, "/");
+                header('Location: devices-production.php');
+            }
+        } else {
+            //! if insert device was successfull
+            setcookie("connectDevice", "failedCode", time() + 5, "/");
+            header('Location: devices-production.php');
+        }
+    }
+
+
+    // Transfer Device device-production
+    if(isset($_POST['transferDevice'])){
+        $endAgency = trim(htmlspecialchars($_POST['endAgency']));
+        
+        $deviceID = $_COOKIE['deviceID'];
+        $agencyStart = $_COOKIE['agencyIDStart'];
+
+
+        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
+        // mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long) SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1");
+        $id_device = $update['id_device'];
+        $volume = $update['volume'];
+        $loc_lat = $update['loc_lat'];
+        $loc_long = $update['loc_long'];
+        mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $volume, '$loc_lat', '$loc_long', '$created_at')");
+
+        if(mysqli_affected_rows($conn)){
+            //! if transfer device was successfull
+            setcookie("transferDevice", "success", time() + 5, "/");
+            header('Location: devices-production.php');
+        } else {
+            //! if transfer device was failed
+            setcookie("transferDevice", "failed", time() + 5, "/");
+            header('Location: devices-production.php');
+        }
+    }
+
+    // Disconnect devices with success connect
+    if(isset($_GET['disconnectDevice'])){
+        $id = $_GET['id'];
+        
+        mysqli_query($conn, "DELETE devices, history FROM devices INNER JOIN history ON devices.id = history.id_device WHERE devices.id = $id");
+        
+        if(mysqli_affected_rows($conn)){
+            //! if disconnect device was successfull
+            setcookie("disconnectDevice", "success", time() + 5, "/");
+            header('Location: devices-production.php');
+        } else {
+            //! if disconnect device was failed
+            setcookie("disconnectDevice", "failed", time() + 5, "/");
+            header('Location: devices-production.php');
+        }
+    }
+
+    // Delete devices with failed connect
+    if(isset($_GET['deleteDevice'])){
+        $id = $_GET['id'];
+        
+        mysqli_query($conn, "DELETE FROM devices WHERE id = $id");
+        
+        if(mysqli_affected_rows($conn)){
+            //! if delete device was successfull
+            setcookie("deleteDevice", "success", time() + 5, "/");
+            header('Location: devices-production.php');
+        } else {
+            //! if delete device was failed
+            setcookie("deleteDevice", "failed", time() + 5, "/");
+            header('Location: devices-production.php');
         }
     }

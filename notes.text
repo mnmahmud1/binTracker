@@ -17,6 +17,12 @@ Level penyelesaian Aplikasi
 -request 5 desc index.php
 -request.php
 -fix created_at -> updated_at (ganti value created_at)
+18/9/2022
+-connect devices
+-transfer device
+-disconnect device active/checking
+-adoption history (not FIX)
+
 
 ~Agency
 11/9/222

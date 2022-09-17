@@ -3,6 +3,38 @@
 	if(!isset($_COOKIE['signinAdmin'])){
 		header('Location: signin.php');
 	}
+
+	require '../conn.php';
+
+	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
+	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
+
+	function calculateDays($value){
+		$start  = date_create($value);
+		$end    = date_create(); // Current time and date
+		$dd   = date_diff( $start, $end );
+		
+		if($dd->y == 0){
+			if($dd->m == 0){
+				// Check
+				$d = ($dd->d == 1 || $dd->d == 0) ? " day " : " days ";
+				
+				return $dd->d.$d;
+			} else {
+				// Check
+				$d = ($dd->d == 1 || $dd->d == 0) ? " day " : " days ";
+				$m = ($dd->m == 1 || $dd->m == 0) ? " month " : " months ";
+				
+				return $dd->m.$m.$dd->d.$d;
+			}
+		} else {
+			// Check
+			$d = ($dd->d == 1 || $dd->d == 0) ? " day " : " days ";
+			$m = ($dd->m == 1 || $dd->m == 0) ? " month " : " months ";
+			$y = ($dd->y == 1 || $dd->y == 0) ? " year " : " years ";
+			return $dd->y.$y.$dd->m.$m.$dd->d.$d;
+		}
+	}
 	
 ?>
 
@@ -48,6 +80,158 @@
 				<p>Loading</p>
 			</div>
 		</div>
+
+		<?php if(isset($_COOKIE["connectDevice"]) && $_COOKIE["connectDevice"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> connect device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["connectDevice"]) && $_COOKIE["connectDevice"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> connect device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["connectDevice"]) && $_COOKIE["connectDevice"] == "failedCode") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+						<strong>Code were used on another device</strong>, please create unique code!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
+		<?php if(isset($_COOKIE["transferDevice"]) && $_COOKIE["transferDevice"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> transfer device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["transferDevice"]) && $_COOKIE["transferDevice"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> transfer device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
+		<?php if(isset($_COOKIE["deleteDevice"]) && $_COOKIE["deleteDevice"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> delete device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["deleteDevice"]) && $_COOKIE["deleteDevice"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> delete device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+
+		<?php if(isset($_COOKIE["disconnectDevice"]) && $_COOKIE["disconnectDevice"] == "success") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Successfully</strong> disconnect device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php elseif(isset($_COOKIE["disconnectDevice"]) && $_COOKIE["disconnectDevice"] == "failed") : ?>
+			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
+					<div class="toast fade show">
+						<div class="toast-header">
+							<i class="fas fa-info-circle"></i>
+							<strong class="me-auto">Attention!</strong>
+							<small>Just Now</small>
+							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+						</div>
+						<div class="toast-body">
+							<strong>Failed</strong> disconnect device!
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
 
 		<!-- Page Wrapper -->
 		<div id="wrapper">
@@ -134,7 +318,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Devices</div>
-										<h1 class="fw-bold">5</h1>
+										<h1 class="fw-bold"><?= $countDevices['value'] ?></h1>
 									</div>
 								</div>
 							</div>
@@ -182,6 +366,10 @@
 											</div>
 										</div>
 
+										<!-- <span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+										<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
+										<span class="badge rounded-pill text-bg-danger px-3">LOST</span> -->
+
 										<table class="display" id="table-device">
 											<thead>
 												<tr>
@@ -194,126 +382,49 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8"> Registered at 23/05/22 04:32 PM</span>
-													</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
-													</td>
-													<td>1 Month 3 days</td>
-													<td class="tcgray">Kebun Raya Cibodas</td>
-													<td>
-														<!-- Default dropend button -->
-														<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
-															<i class="fa-solid fa-ellipsis-vertical"></i>
-														</button>
-														<ul class="dropdown-menu">
-															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
-															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
-															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
-														</ul>
-													</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8"> Registered at 23/05/22 04:32 PM</span>
-													</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
-													</td>
-													<td>2 Month 1 days</td>
-													<td class="tcgray">Kebun Raya Cibodas</td>
-													<td>
-														<!-- Default dropend button -->
-														<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
-															<i class="fa-solid fa-ellipsis-vertical"></i>
-														</button>
-														<ul class="dropdown-menu">
-															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
-															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
-															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
-														</ul>
-													</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8"> Registered at 23/05/22 04:32 PM</span>
-													</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
-													</td>
-													<td>23 days</td>
-													<td class="tcgray">Wisata Curug Ciherang Sukamakmur</td>
-													<td>
-														<!-- Default dropend button -->
-														<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
-															<i class="fa-solid fa-ellipsis-vertical"></i>
-														</button>
-														<ul class="dropdown-menu">
-															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
-															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
-															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
-														</ul>
-													</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8"> Registered at 23/05/22 04:32 PM</span>
-													</td>
-													<td>
-														<span class="badge rounded-pill text-bg-danger px-3">LOST</span>
-													</td>
-													<td>14 days</td>
-													<td class="tcgray">Taman Satwa Ragunan</td>
-													<td>
-														<!-- Default dropend button -->
-														<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
-															<i class="fa-solid fa-ellipsis-vertical"></i>
-														</button>
-														<ul class="dropdown-menu">
-															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
-															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
-															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
-														</ul>
-													</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8"> Registered at 23/05/22 04:32 PM</span>
-													</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
-													</td>
-													<td>8 days</td>
-													<td class="tcgray">Taman Safari Puncak Bogor</td>
-													<td>
-														<!-- Default dropend button -->
-														<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
-															<i class="fa-solid fa-ellipsis-vertical"></i>
-														</button>
-														<ul class="dropdown-menu">
-															<!-- Dropdown menu links -->
-															<li><a class="dropdown-item" href="device-production-details.php">Details</a></li>
-															<li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice">Transfer</button></li>
-															<li><button class="dropdown-item" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
-														</ul>
-													</td>
-												</tr>
+												<?php $i=1; foreach ($callDevices as $device) : ?>
+													<?php
+														$deviceID = $device['id'];
+														$checkAdopted = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
+														$checkAdoptedDevice = mysqli_fetch_assoc($checkAdopted);
+													?>
+													<tr>
+														<td><?= $i ?></td>
+														<td>
+															Device ID<?= $device['code'] ?> <br />
+															<span class="tcgray fs8"> Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at']))?></span>
+														</td>
+														<td>
+															<?php if(mysqli_num_rows($checkAdopted ) > 0) : ?>
+																<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-warning px-3">CHECKING</span>
+															<?php endif ?>
+														</td>
+														<td><?= calculateDays(date('Y-m-d', strtotime($device['created_at']))) ?></td>
+														<?php if(isset($checkAdoptedDevice['name'])) : ?>
+															<td class="tcgray"><?= $checkAdoptedDevice['name'] ?></td>
+														<?php else : ?>
+															<td class="tcgray">Not Adopted</td>
+														<?php endif ?>
+														<td>
+															<!-- Default dropend button -->
+															<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">
+																<i class="fa-solid fa-ellipsis-vertical"></i>
+															</button>
+															<ul class="dropdown-menu">
+																<!-- Dropdown menu links -->
+																<?php if(isset($checkAdoptedDevice['name'])) : ?>
+																	<li><button class="dropdown-item" onclick="urlCookieTo('deviceDetails', '<?= $deviceID ?>', 1)">Details</button></li>
+																	<li><button name="transferButton" id="transferButton" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice" data-nameagency="<?= $checkAdoptedDevice['name'] ?>" data-idagency="<?= $checkAdoptedDevice['id'] ?>" data-iddevice="<?= $deviceID ?>">Transfer</button></li>
+																	<li><button class="dropdown-item" onclick="return alertModal('function.php?disconnectDevice=1&id=<?= $deviceID ?>', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
+																<?php else : ?>
+																	<li><button class="dropdown-item" onclick="return alertModal('function.php?deleteDevice=1&id=<?= $deviceID ?>', 'Delete', 'After delete this device must be readopting to use again!')">Delete</button></li>
+																<?php endif ?>
+															</ul>
+														</td>
+													</tr>
+												<?php $i++; endforeach ?>
 											</tbody>
 										</table>
 									</div>
@@ -353,7 +464,7 @@
 		<div class="modal fade" id="connectDevice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="connectDeviceLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
-					<form action="" method="post">
+					<form action="function.php" method="post">
 						<div class="modal-header">
 							<h5 class="modal-title" id="connectDeviceLabel">Enter Unique Code</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -364,13 +475,13 @@
 								<input type="text" name="code" id="code" class="form-control" maxlength="6" placeholder="Enter your 6 digit device unique code" autofocus required />
 							</div>
 							<div class="mb-3">
-								<label for="deskripsi" class="form-label">Description</label>
-								<textarea name="deskripsi" id="deskripsi" class="form-control" placeholder="Perangkat ada di dekat minimarket" required></textarea>
+								<label for="description" class="form-label">Description</label>
+								<textarea name="description" id="description" class="form-control" placeholder="Perangkat ada di dekat minimarket" required></textarea>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
-							<button type="submit" name="pairDevice" class="btn btn-primary">Connect</button>
+							<button type="submit" name="connectDevice" class="btn btn-primary">Connect</button>
 						</div>
 					</form>
 				</div>
@@ -381,7 +492,7 @@
 		<div class="modal fade" id="transferDevice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="transferDeviceLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
-					<form action="" method="post">
+					<form action="function.php" method="post">
 						<div class="modal-header">
 							<h5 class="modal-title" id="transferDeviceLabel">Transfer Device</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -390,21 +501,21 @@
 							<div class="row">
 								<div class="col">
 									<label for="startAgency" class="form-label fw-bolder text-gray-800">From</label>
-									<input type="text" name="startAgency" id="startAgency" class="form-control" value="Kebun Raya Cibodas" readonly />
+									<input type="text" name="startAgency" id="startAgency" class="form-control" readonly />
 								</div>
 								<div class="col-1 d-flex align-items-center">
 									<i class="fa-solid fa-arrow-right-long"></i>
 								</div>
 								<div class="col">
 									<label for="endAgency" class="form-label fw-bolder text-gray-800">To</label>
-									<input name="endAgency" id="endAgency" list="datalistAgency" class="form-select" placeholder="Live search agency" required />
-									<datalist id="datalistAgency">
-										<option value="Kebun Raya Cibodas"></option>
-										<option value="PT. Artaboga Semesta"></option>
-										<option value="Seattle"></option>
-										<option value="Los Angeles"></option>
-										<option value="Chicago"></option>
-									</datalist>
+									<?php $idAgency = $_COOKIE['agencyIDStart']; $callAgency = mysqli_query($conn, "SELECT id, name FROM users EXCEPT SELECT id, name FROM users WHERE id = $idAgency") ?>
+									<select name="endAgency" id="endAgency" class="form-select" required>
+										<option value="">Select</option>
+										<?php foreach($callAgency as $agency) : ?>
+											<option value="<?= $agency['id'] ?>"><?= $agency['name'] ?></option>
+										<?php endforeach ?>
+									</select>
+									<!-- </datalist> -->
 								</div>
 							</div>
 						</div>
@@ -476,6 +587,38 @@
 				let markerMe = L.marker([position.coords.latitude, position.coords.longitude], { icon: greenIcon }).addTo(map);
 				markerMe.bindPopup("Lokasi Anda").openPopup();
 			}
+		</script>
+		
+		<script>
+			// Set Cookie for detail transfer device
+			function urlCookie(c_name, value, exdays) {
+				var exdate = new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+				document.cookie = c_name + "=" + c_value;
+			}
+
+			// / Set Cookie details device with direct location
+			function urlCookieTo(c_name, value, exdays) {
+				var exdate = new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+				document.cookie = c_name + "=" + c_value;
+				window.location.href = 'device-production-details.php';
+			}
+
+			// Fix 1 modal for transferDevice
+			$(document).on('click','#transferButton', function(e) {
+                let name = $(this).data('nameagency')
+				let id = $(this).data('idagency')
+				let deviceID = $(this).data('iddevice')
+
+                $('#startAgency').val(name)
+
+				urlCookie('agencyIDStart', id, 1)
+				urlCookie('deviceID', deviceID, 1)
+            });
+
 		</script>
 
 		<!-- My JS Configuration -->

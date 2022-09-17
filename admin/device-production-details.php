@@ -3,6 +3,13 @@
 	if(!isset($_COOKIE['signinAdmin'])){
 		header('Location: signin.php');
 	}
+
+	require '../conn.php';
+
+	$deviceID = $_COOKIE['deviceDetails'];
+
+	$callDevice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT code FROM devices WHERE id = $deviceID"));
+	$callPairHistoryDevice = mysqli_query($conn, "SELECT users.name FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID AND history.status = 'TRF' ORDER BY history.id DESC");
 	
 ?>
 
@@ -127,7 +134,7 @@
 								<li class="breadcrumb-item active" aria-current="page">Details</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - Device ID1AE413</h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - Device ID<?= $callDevice['code'] ?></h1>
 
 						<div class="row mb-3">
 							<div class="col">
@@ -148,22 +155,19 @@
 												</tr>
 											</thead>
 											<tbody>
+												<?php
+													$num = mysqli_num_rows($callPairHistoryDevice);
+												?>
+												<?php $i=1; foreach ($callPairHistoryDevice as $history) : ?>
 												<tr>
-													<td>1</td>
+													<td><?= $i ?></td>
 													<td>
 														Device ID1AE413 <br />
 														<span class="tcgray fs8">Adopted at 23/05/22 01:32 PM</span>
 													</td>
-													<td class="tcgray"><span class="fw-bold" style="color: black">#2</span> Kebun Raya Cibodas</td>
+													<td class="tcgray"><span class="fw-bold" style="color: black">#<?= $num ?></span> <?= $history['name'] ?></td>
 												</tr>
-												<tr>
-													<td>2</td>
-													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8">Adopted at 23/05/22 01:32 PM</span>
-													</td>
-													<td class="tcgray"><span class="fw-bold" style="color: black">#1</span> Taman Satwa Ragunan</td>
-												</tr>
+											<?php $i++; $num--; endforeach ?>
 											</tbody>
 										</table>
 									</div>
