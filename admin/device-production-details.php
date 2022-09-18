@@ -9,8 +9,12 @@
 	$deviceID = $_COOKIE['deviceDetails'];
 
 	$callDevice = mysqli_fetch_assoc(mysqli_query($conn, "SELECT code FROM devices WHERE id = $deviceID"));
-	$callPairHistoryDevice = mysqli_query($conn, "SELECT users.name FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID AND history.status = 'TRF' ORDER BY history.id DESC");
+	$callPairHistoryDevice = mysqli_query($conn, "SELECT users.name, history.created_at FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID AND history.status = 'TRF' ORDER BY history.id DESC");
 	
+	$checkHistory = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_user FROM history WHERE id_device = $deviceID AND history.status = 'TRF' ORDER BY id DESC LIMIT 1"));
+	$EndUser = $checkHistory['id_user'];
+	$EndPoint = $checkHistory['id'];
+	$CallHistoryDevice = mysqli_query($conn, "SELECT devices.code, history.volume, history.created_at FROM history INNER JOIN devices ON history.id_device = devices.id WHERE history.id_device = $deviceID AND history.id_user = $EndUser AND history.id >= $EndPoint");
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +134,7 @@
 						<nav aria-label="breadcrumb" class="mb-4">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="index.php">BinTracker</a></li>
-								<li class="breadcrumb-item"><a href="device-production.php">Devices Production</a></li>
+								<li class="breadcrumb-item"><a href="devices-production.php">Devices Production</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Details</li>
 							</ol>
 						</nav>
@@ -143,6 +147,8 @@
 										<div class="row d-flex justify-content-between align-items-center mb-4">
 											<div class="col text-start">
 												<span class="h6 fw-bold text-gray-800"> Adoption History </span>
+												<br>
+												<span class="fs8 tcgray">All</span>
 											</div>
 										</div>
 
@@ -162,8 +168,8 @@
 												<tr>
 													<td><?= $i ?></td>
 													<td>
-														Device ID1AE413 <br />
-														<span class="tcgray fs8">Adopted at 23/05/22 01:32 PM</span>
+														Device ID<?= $callDevice['code'] ?> <br />
+														<span class="tcgray fs8">Adopted at <?= date('Y-m-d g:i A', strtotime($history['created_at'])) ?></span>
 													</td>
 													<td class="tcgray"><span class="fw-bold" style="color: black">#<?= $num ?></span> <?= $history['name'] ?></td>
 												</tr>
@@ -182,8 +188,16 @@
 										<div class="row d-flex justify-content-between align-items-center mb-4">
 											<div class="col text-start">
 												<span class="h6 fw-bold text-gray-800"> History Checking </span>
+												<br>
+												<span class="fs8 tcgray">Current User</span>
 											</div>
 										</div>
+
+										<!-- Badge History Checking -->
+										<!-- <span class="badge rounded-pill text-bg-success px-3">60/100</span>
+										<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
+										<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
+										<span class="badge rounded-pill text-bg-danger px-3">LOST</span> -->
 
 										<table class="display" id="table-history-checking">
 											<thead>
@@ -191,50 +205,24 @@
 													<th>#</th>
 													<th>Device</th>
 													<th>Status</th>
-													<th>Description</th>
+													<th>Update at</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">60/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-danger px-3">LOST</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
+												<?php $i=1; foreach($CallHistoryDevice as $historyDevice) : ?>
+													<tr>
+														<td><?= $i ?></td>
+														<td>Device ID<?= $historyDevice['code'] ?></td>
+														<td>
+															<?php if($historyDevice['volume'] < 100 ) : ?>
+																<span class="badge rounded-pill text-bg-success px-3"><?= $historyDevice['volume'] ?>/100</span>
+															<?php elseif($historyDevice['volume'] == 100 ) : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
+															<?php endif ?>
+														</td>
+														<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($historyDevice['created_at'])) ?></td>
+													</tr>
+												<?php $i++; endforeach ?>
 											</tbody>
 										</table>
 									</div>

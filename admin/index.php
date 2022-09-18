@@ -7,6 +7,25 @@
 	require '../conn.php';
 
 	$callRequests = mysqli_query($conn, "SELECT title, status, created_at FROM requests ORDER BY created_at DESC LIMIT 5");
+	$callDevices = mysqli_query($conn, "SELECT code, created_at FROM devices");
+
+	// function countData($table, $where = ''){
+	// 	global $conn;
+	// 	if(isset($where)){
+	// 		$query = mysqli_query($conn, "SELECT COUNT(id) as total FROM $table WHERE $where");
+	// 		$val = mysqli_fetch_assoc($query);
+	// 		return $val['total'];
+	// 	} else {
+	// 		$query = mysqli_query($conn, "SELECT COUNT(id) as total FROM $table");
+	// 		$val = mysqli_fetch_assoc($query);
+	// 		return $val['total'];
+	// 	}
+	// }
+
+	$calcAgency = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM users"));
+	$calcDoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 1"));
+	$calcUndoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 0"));
+
 
 ?>
 
@@ -192,7 +211,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Agency</div>
-										<h1 class="fw-bold">5</h1>
+										<h1 class="fw-bold"><?= $calcAgency ?></h1>
 									</div>
 								</div>
 							</div>
@@ -202,7 +221,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Devices Production</div>
-										<h1 class="fw-bold">23</h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($callDevices) ?></h1>
 									</div>
 								</div>
 							</div>
@@ -212,7 +231,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Done Requests</div>
-										<h1 class="fw-bold">13</h1>
+										<h1 class="fw-bold"><?= $calcDoneRequest ?></h1>
 									</div>
 								</div>
 							</div>
@@ -222,7 +241,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Undone Requests</div>
-										<h1 class="fw-bold">8</h1>
+										<h1 class="fw-bold"><?= $calcUndoneRequest ?></h1>
 									</div>
 								</div>
 							</div>
@@ -262,36 +281,27 @@
 										</div>
 
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
+											<?php foreach($callDevices as $device) : ?>
+												<li class="list-group-item">
+													<div class="d-flex justify-content-between">
+														<span>Device ID<?= $device['code'] ?></span>
+														<span class="fs8 tcgray"><?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></span>
+													</div>
+												</li>
+											<?php endforeach ?>
+
+											<?php $numDev = mysqli_num_rows($callDevices) ; $rows = 5 - $numDev; ?>
+											<?php if($numDev < 5) : ?>
+												<?php for($i=1;$i<=$rows;$i++) : ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col-7">
+															<span>-</span>
+														</div>
+													</div>
+												</li>
+												<?php endfor ?>
+											<?php endif ?>
 										</ul>
 									</div>
 								</div>
@@ -328,8 +338,8 @@
 												</li>
 											<?php endforeach ?>
 
-											<?php $num = mysqli_num_rows($callRequests) ; $rows = 5 - $num; ?>
-											<?php if($num < 5) : ?>
+											<?php $numReq = mysqli_num_rows($callRequests) ; $rows = 5 - $numReq; ?>
+											<?php if($numReq < 5) : ?>
 												<?php for($i=1;$i<=$rows;$i++) : ?>
 												<li class="list-group-item">
 													<div class="row justify-content-between align-items-baseline">
