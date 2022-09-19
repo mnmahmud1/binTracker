@@ -5,9 +5,11 @@
 	}
 
 	require '../conn.php';
+	date_default_timezone_set("Asia/Jakarta");
 
 	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
 	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
+	$callAgency = mysqli_query($conn, "SELECT id, name FROM users");
 
 	function calculateDays($value){
 		$start  = date_create($value);
@@ -312,7 +314,7 @@
 						</nav>
 						<h1 class="h4 mb-4 fw-bold text-gray-800">Devices Production</h1>
 
-						<div class="row">
+						<div class="row mb-2">
 							<!-- Devices -->
 							<div class="col mb-2">
 								<div class="card text-center">
@@ -359,6 +361,8 @@
 										<div class="row mb-4 justify-content-between align-items-baseline">
 											<div class="col text-start">
 												<span class="h6 fw-bold text-gray-800"> Devices List </span>
+												<br>
+												<span class="fs8 tcgray">All</span>
 											</div>
 											<div class="col text-end">
 												<!-- Button trigger modal Connect Devices -->
@@ -385,7 +389,7 @@
 												<?php $i=1; foreach ($callDevices as $device) : ?>
 													<?php
 														$deviceID = $device['id'];
-														$checkAdopted = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
+														$checkAdopted = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
 														$checkAdoptedDevice = mysqli_fetch_assoc($checkAdopted);
 													?>
 													<tr>
@@ -416,8 +420,8 @@
 																<!-- Dropdown menu links -->
 																<?php if(isset($checkAdoptedDevice['name'])) : ?>
 																	<li><button class="dropdown-item" onclick="urlCookieTo('deviceDetails', '<?= $deviceID ?>', 1)">Details</button></li>
-																	<li><button name="transferButton" id="transferButton" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#transferDevice" data-nameagency="<?= $checkAdoptedDevice['name'] ?>" data-idagency="<?= $checkAdoptedDevice['id'] ?>" data-iddevice="<?= $deviceID ?>">Transfer</button></li>
-																	<li><button class="dropdown-item" onclick="return alertModal('function.php?disconnectDevice=1&id=<?= $deviceID ?>', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
+																	<li><button class="dropdown-item" name="transferButton" id="transferButton" data-bs-toggle="modal" data-bs-target="#transferDevice" data-nameagency="<?= $checkAdoptedDevice['name'] ?>" data-idagency="<?= $checkAdoptedDevice['id'] ?>" data-iddevice="<?= $deviceID ?>">Transfer</button></li>
+																	<li><button class="dropdown-item" onclick="return alertModal('function.php?disconnectDevice=1&id=<?= $deviceID ?>&page=device-production.php', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 																<?php else : ?>
 																	<li><button class="dropdown-item" onclick="return alertModal('function.php?deleteDevice=1&id=<?= $deviceID ?>', 'Delete', 'After delete this device must be readopting to use again!')">Delete</button></li>
 																<?php endif ?>
@@ -508,7 +512,6 @@
 								</div>
 								<div class="col">
 									<label for="endAgency" class="form-label fw-bolder text-gray-800">To</label>
-									<?php $idAgency = $_COOKIE['agencyIDStart']; $callAgency = mysqli_query($conn, "SELECT id, name FROM users EXCEPT SELECT id, name FROM users WHERE id = $idAgency") ?>
 									<select name="endAgency" id="endAgency" class="form-select" required>
 										<option value="">Select</option>
 										<?php foreach($callAgency as $agency) : ?>
@@ -609,14 +612,25 @@
 
 			// Fix 1 modal for transferDevice
 			$(document).on('click','#transferButton', function(e) {
-                let name = $(this).data('nameagency')
-				let id = $(this).data('idagency')
-				let deviceID = $(this).data('iddevice')
+                let name = $(this).data('nameagency');
+				let id = $(this).data('idagency');
+				let deviceID = $(this).data('iddevice');
 
-                $('#startAgency').val(name)
+                $('#startAgency').val(name);
 
-				urlCookie('agencyIDStart', id, 1)
-				urlCookie('deviceID', deviceID, 1)
+				urlCookie('agencyIDStart', id, 1);
+				urlCookie('deviceID', deviceID, 1);
+
+				// function getCookie(name) {
+				// 	const value = `; ${document.cookie}`;
+				// 	const parts = value.split(`; ${name}=`);
+				// 	if (parts.length === 2) return parts.pop().split(';').shift();
+				// }
+
+				// let idCookie = getCookie('agencyIDStart');
+				// Fix for show hidden option elements from hidden before(rais)
+				$("#endAgency").children('option').show();
+				$("#endAgency option[value="+ id +"]").hide();
             });
 
 		</script>

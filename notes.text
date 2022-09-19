@@ -26,6 +26,12 @@ Level penyelesaian Aplikasi
 -adoption history (FIX)
 -history device current user
 -overview status & device list
+19/9/2022
+-perbaiki options transfer (bug) solusi=hidden option
+-details agency (devices list) -transfer
+-details agency (devices list) -disconnect
+-count adopt devices agency.php
+-count devices device-production.php
 
 
 ~Agency

@@ -243,14 +243,15 @@
 											<tbody>
 												<?php $i=1; foreach($callAgency as $agency) : ?>
 													<!-- <span class="badge rounded-pill text-bg-warning px-3">INACTIVE</span> -->
+													<?php $id = $agency['id']; $num = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM history WHERE adopt = $id")) ?>
 													<tr>
 														<td><?= $i ?></td>
 														<td><?= $agency['name'] ?></td>
-														<td>14</td>
+														<td><?= $num ?></td>
 														<td>
 															<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
 														</td>
-														<td class="tcgray"><?= $agency['created_at'] ?></td>
+														<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($agency['created_at']))?></td>
 														<td>
 															<!-- Default dropend button -->
 															<button type="button" class="btn btn-sm btn-white" data-bs-toggle="dropdown">

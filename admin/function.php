@@ -224,19 +224,28 @@
         $deviceID = $_COOKIE['deviceID'];
         $agencyStart = $_COOKIE['agencyIDStart'];
 
-
-        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
+        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
         // mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long) SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1");
+        $id = $update['id'];
         $id_device = $update['id_device'];
         $volume = $update['volume'];
         $loc_lat = $update['loc_lat'];
         $loc_long = $update['loc_long'];
-        mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $volume, '$loc_lat', '$loc_long', '$created_at')");
 
+        mysqli_query($conn, "UPDATE history SET adopt = NULL WHERE id = $id");
+        
         if(mysqli_affected_rows($conn)){
+            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$loc_lat', '$loc_long', '$created_at')");
             //! if transfer device was successfull
-            setcookie("transferDevice", "success", time() + 5, "/");
-            header('Location: devices-production.php');
+            if(mysqli_affected_rows($conn)){
+                //! if transfer device was successfull
+                setcookie("transferDevice", "success", time() + 5, "/");
+                header('Location: devices-production.php');
+            } else {
+                //! if transfer device was failed
+                setcookie("transferDevice", "failed", time() + 5, "/");
+                header('Location: devices-production.php');
+            }
         } else {
             //! if transfer device was failed
             setcookie("transferDevice", "failed", time() + 5, "/");
@@ -244,20 +253,57 @@
         }
     }
 
+    // Transfer Device details-agency
+    if(isset($_POST['transferDeviceDetailAgency'])){
+        $endAgency = trim(htmlspecialchars($_POST['endAgency']));
+        
+        $deviceID = $_COOKIE['deviceID'];
+        $agencyStart = $_COOKIE['agencyIDStart'];
+
+        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
+        // mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long) SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1");
+        $id = $update['id'];
+        $id_device = $update['id_device'];
+        $volume = $update['volume'];
+        $loc_lat = $update['loc_lat'];
+        $loc_long = $update['loc_long'];
+
+        mysqli_query($conn, "UPDATE history SET adopt = NULL WHERE id = $id");
+        
+        if(mysqli_affected_rows($conn)){
+            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$loc_lat', '$loc_long', '$created_at')");
+            //! if transfer device was successfull
+            if(mysqli_affected_rows($conn)){
+                //! if transfer device was successfull
+                setcookie("transferDevice", "success", time() + 5, "/");
+                header('Location: details-agency.php');
+            } else {
+                //! if transfer device was failed
+                setcookie("transferDevice", "failed", time() + 5, "/");
+                header('Location: details-agency.php');
+            }
+        } else {
+            //! if transfer device was failed
+            setcookie("transferDevice", "failed", time() + 5, "/");
+            header('Location: details-agency.php');
+        }
+    }
+
     // Disconnect devices with success connect
     if(isset($_GET['disconnectDevice'])){
         $id = $_GET['id'];
+        $page = $_GET['page'];
         
         mysqli_query($conn, "DELETE devices, history FROM devices INNER JOIN history ON devices.id = history.id_device WHERE devices.id = $id");
         
         if(mysqli_affected_rows($conn)){
             //! if disconnect device was successfull
             setcookie("disconnectDevice", "success", time() + 5, "/");
-            header('Location: devices-production.php');
+            header('Location: '.$page.'');
         } else {
             //! if disconnect device was failed
             setcookie("disconnectDevice", "failed", time() + 5, "/");
-            header('Location: devices-production.php');
+            header('Location: '.$page.'');
         }
     }
 
