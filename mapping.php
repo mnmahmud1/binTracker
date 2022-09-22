@@ -9,7 +9,8 @@
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
-
+	$callDevices = mysqli_query($conn, "SELECT devices.code, history.volume, devices.description, history.created_at FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
+	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
 ?>
 
 <!DOCTYPE html>
@@ -168,80 +169,29 @@
 													<th>Status</th>
 													<th>Description</th>
 													<th>Last Checked</th>
-													<th></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</td>
-													<td>Dekat Ruko Hauss</td>
-													<td class="tcgray">23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
-															<i class="fa-solid fa-trash"></i>
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">60/100</span>
-													</td>
-													<td>Dekat Ruko Hauss</td>
-													<td class="tcgray">23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
-															<i class="fa-solid fa-trash"></i>
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
-													</td>
-													<td>Dekat Ruko Hauss</td>
-													<td class="tcgray">23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
-															<i class="fa-solid fa-trash"></i>
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
-													</td>
-													<td>Dekat Ruko Hauss</td>
-													<td class="tcgray">23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
-															<i class="fa-solid fa-trash"></i>
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-danger px-3">LOST</span>
-													</td>
-													<td>Dekat Ruko Hauss</td>
-													<td class="tcgray">23/05/22 04:32 PM</td>
-													<td>
-														<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
-															<i class="fa-solid fa-trash"></i>
-														</button>
-													</td>
-												</tr>
+												<?php $i=1; foreach ($callDevices as $device) : ?>
+													<tr>
+														<td><?= $i ?></td>
+														<td>Device ID<span class="fw-bold"><?= $device['code'] ?></span> </td>
+														<td>
+															<?php if($device['volume'] < 100 ) : ?>
+																<span class="badge rounded-pill text-bg-success px-3"><?= $device['volume'] ?>/100</span>
+															<?php elseif($device['volume'] == 100 ) : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
+															<?php endif ?>
+														</td>
+														<td><?= $device['description'] ?></td>
+														<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></td>
+														<!-- <td>
+															<button class="btn btn-sm btn-light" onclick="return alertModal('includes/php/functionInstance.php?logout=1', 'Delete', 'If you delete maybe any data cant be recovered!')">
+																<i class="fa-solid fa-trash"></i>
+															</button>
+														</td> -->
+													</tr>
+												<?php $i++; endforeach ?>
 											</tbody>
 										</table>
 									</div>
@@ -342,6 +292,11 @@
 					maxZoom: 18,
 					id: "mapbox/streets-v11",
 				}).addTo(map);
+
+				<?php foreach($callLocationDevice as $location) : ?>
+					var marker = L.marker([<?= $location["loc_lat"] ?> , <?= $location["loc_long"] ?> ]).addTo(map);
+					marker.bindPopup("<?= 'Device ID' . $location["code"] ?>").openPopup();
+				<?php endforeach ?>
 
 				// create a custom icon
 				var greenIcon = L.icon({

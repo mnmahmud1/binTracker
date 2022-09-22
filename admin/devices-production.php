@@ -10,7 +10,7 @@
 	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
 	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
 	$callAgency = mysqli_query($conn, "SELECT id, name FROM users");
-	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.id, history.id_device, history.volume, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device)");
+	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device)");
 
 	function calculateDays($value){
 		$start  = date_create($value);
@@ -390,8 +390,9 @@
 												<?php $i=1; foreach ($callDevices as $device) : ?>
 													<?php
 														$deviceID = $device['id'];
-														$checkAdopted = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
-														$checkAdoptedDevice = mysqli_fetch_assoc($checkAdopted);
+														$checkAdopted = mysqli_query($conn, "SELECT id FROM history WHERE id_device = $deviceID ORDER BY id DESC LIMIT 1");
+														$checkIdentity = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
+														$checkAdoptedDevice = mysqli_fetch_assoc($checkIdentity);
 													?>
 													<tr>
 														<td><?= $i ?></td>
@@ -400,10 +401,10 @@
 															<span class="tcgray fs8"> Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at']))?></span>
 														</td>
 														<td>
-															<?php if(mysqli_num_rows($checkAdopted ) > 0) : ?>
+															<?php if(isset($checkAdopted)) : ?>
 																<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
-																<?php else : ?>
-																	<span class="badge rounded-pill text-bg-warning px-3">CHECKING</span>
+															<?php else : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">CHECKING</span>
 															<?php endif ?>
 														</td>
 														<td><?= calculateDays(date('Y-m-d', strtotime($device['created_at']))) ?></td>
@@ -485,7 +486,7 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-white" data-bs-dismiss="modal" tabindex="1">Close</button>
 							<button type="submit" name="connectDevice" class="btn btn-primary">Connect</button>
 						</div>
 					</form>

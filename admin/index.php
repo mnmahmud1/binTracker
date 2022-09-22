@@ -9,19 +9,6 @@
 	$callRequests = mysqli_query($conn, "SELECT title, status, created_at FROM requests ORDER BY created_at DESC LIMIT 5");
 	$callDevices = mysqli_query($conn, "SELECT code, created_at FROM devices");
 
-	// function countData($table, $where = ''){
-	// 	global $conn;
-	// 	if(isset($where)){
-	// 		$query = mysqli_query($conn, "SELECT COUNT(id) as total FROM $table WHERE $where");
-	// 		$val = mysqli_fetch_assoc($query);
-	// 		return $val['total'];
-	// 	} else {
-	// 		$query = mysqli_query($conn, "SELECT COUNT(id) as total FROM $table");
-	// 		$val = mysqli_fetch_assoc($query);
-	// 		return $val['total'];
-	// 	}
-	// }
-
 	$calcAgency = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM users"));
 	$calcDoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 1"));
 	$calcUndoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 0"));

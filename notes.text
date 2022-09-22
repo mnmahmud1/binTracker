@@ -35,13 +35,21 @@ Level penyelesaian Aplikasi
 21/9/2022
 -tampilkan data akhir dari history berdasar id_device
 -tampilkan lokasi di map (belum fix sinyal lemah)
+23/09/2022
+-fix device production saat daftar dan device sudah memberikan history maka ubah checking -> active
 
 
 ~Agency
-11/9/222
+11/9/2022
 - sign in
 - sign up
 - change password
-13/9/22
+13/9/2022
 - create request
 - show request
+23/9/2022
+-overview device list & history lists
+- mapping.php (device list) & mapp
+- device.php (device list)
+- history.php (history list)
+- add clear cookie saat sign out

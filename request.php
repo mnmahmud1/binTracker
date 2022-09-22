@@ -5,6 +5,7 @@
 	}
 
 	require 'conn.php';
+	date_default_timezone_set("Asia/Jakarta");
 	
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
@@ -255,7 +256,7 @@
 																<td><span class="badge rounded-pill text-bg-success px-3">DONE</span></td>
 															<?php endif ?>
 															<td><?= $request['message']?></td>
-															<td class="tcgray"><?= $request['created_at'] ?></td>
+															<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($request['created_at'])) ?></td>
 														</tr>
 															<?php $i++ ?>
 														<?php endforeach ?>

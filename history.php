@@ -9,6 +9,7 @@
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
+	$callHistory = mysqli_query($conn, "SELECT devices.code, history.created_at, history.volume FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id_user = (SELECT id FROM users WHERE username = '$username') ORDER BY history.id DESC");
 
 ?>
 
@@ -150,56 +151,30 @@
 											</div>
 										</div>
 
-										<table class="display" id="table-device">
+										<table class="display" id="table-history">
 											<thead>
 												<tr>
 													<th>#</th>
 													<th>Device</th>
 													<th>Status</th>
-													<th>Description</th>
+													<th>Updated at</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<td>1</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>2</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-success px-3">60/100</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>3</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>4</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
-												<tr>
-													<td>5</td>
-													<td>Device ID1AE413</td>
-													<td>
-														<span class="badge rounded-pill text-bg-danger px-3">LOST</span>
-													</td>
-													<td class="tcgray">Updated at 23/05/22 04:32 PM</td>
-												</tr>
+												<?php $i=mysqli_num_rows($callHistory); foreach ($callHistory as $history) : ?>
+													<tr>
+														<td><span class="fw-bold"><?= $i ?></span> </td>
+														<td>Device ID<span class="fw-bold"><?= $history['code'] ?></span></td>
+														<td>
+															<?php if($history['volume'] < 100 ) : ?>
+																<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
+															<?php elseif($history['volume'] == 100 ) : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
+															<?php endif ?>
+														</td>
+														<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($history['created_at'])) ?></td>
+													</tr>
+												<?php $i--; endforeach ?>
 											</tbody>
 										</table>
 									</div>

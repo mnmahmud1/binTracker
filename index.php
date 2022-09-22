@@ -9,6 +9,8 @@
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
+	$callDevices = mysqli_query($conn, "SELECT devices.code, devices.created_at FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.adopt = (SELECT id FROM users WHERE username = '$username')");
+	$callHistory = mysqli_query($conn, "SELECT devices.code, history.created_at, history.volume FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id_user = (SELECT id FROM users WHERE username = '$username') ORDER BY history.id DESC");
 ?>
 
 <!DOCTYPE html>
@@ -144,7 +146,7 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Devices</div>
-										<h1 class="fw-bold">15</h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($callDevices) ?></h1>
 									</div>
 								</div>
 							</div>
@@ -210,40 +212,32 @@
 												<br>
 												<span class="fs8 tcgray">All</span>
 											</h6>
-											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='#'">View All</a>
+											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='devices.php'">View All</a>
 										</div>
 
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex justify-content-between">
-													<span>Device ID157AB3</span>
-													<span class="fs8 tcgray">Registered at 23/05/22 04:32 PM</span>
-												</div>
-											</li>
+											<?php foreach ($callDevices as $device) : ?>
+												<li class="list-group-item">
+													<div class="d-flex justify-content-between">
+														<span>Device ID<span class="fw-bold"><?= $device['code'] ?></span></span>
+														<span class="fs8 tcgray">Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></span>
+													</div>
+												</li>
+											<?php endforeach ?>
+
+											<?php $numDev = mysqli_num_rows($callDevices) ; $rows = 5 - $numDev; ?>
+											<?php if($numDev < 5) : ?>
+												<?php for($i=1;$i<=$rows;$i++) : ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col-7">
+															<span>-</span>
+														</div>
+													</div>
+												</li>
+												<?php endfor ?>
+											<?php endif ?>
+											
 										</ul>
 									</div>
 								</div>
@@ -254,78 +248,44 @@
 										<div class="p-3 d-flex justify-content-between align-items-baseline">
 											<h6 class="card-title fw-bold">
 												History <br>
-												<span class="fs8 tcgray">Today</span>
+												<span class="fs8 tcgray">All</span>
 											</h6>
-											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='#'">View All</a>
+											<button class="btn btn-link text-decoration-none fs8" onclick="window.location.href='history.php'">View All</a>
 										</div>
 										
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
+											<?php foreach ($callHistory as $history): ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col">
+															<span>Device ID<span class="fw-bold"><?= $history['code'] ?></span></span>
+														</div>
+														<div class="col text-start">
+															<span class="fs8 tcgray"><?= date('Y-m-d g:i A', strtotime($history['created_at'])) ?></span>
+														</div>
+														<div class="col text-end">
+															<?php if($history['volume'] < 100 ) : ?>
+																<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
+															<?php elseif($history['volume'] == 100 ) : ?>
+																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
+															<?php endif ?>
+														</div>
 													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
+												</li>
+											<?php endforeach ?>
+
+											<?php $numDev = mysqli_num_rows($callHistory) ; $rows = 5 - $numDev; ?>
+											<?php if($numDev < 5) : ?>
+												<?php for($i=1;$i<=$rows;$i++) : ?>
+												<li class="list-group-item">
+													<div class="row justify-content-between align-items-baseline">
+														<div class="col-7">
+															<span>-</span>
+														</div>
 													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row justify-content-between align-items-baseline">
-													<div class="col">
-														<span>Device ID157AB3</span>
-													</div>
-													<div class="col text-start">
-														<span class="fs8 tcgray">08:41 PM</span>
-													</div>
-													<div class="col text-end">
-														<span class="badge rounded-pill text-bg-success px-3">30/100</span>
-													</div>
-												</div>
-											</li>
-											
+												</li>
+												<?php endfor ?>
+											<?php endif ?>
 											
 										</ul>
 									</div>

@@ -7,6 +7,12 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+	$("#table-history").DataTable({
+		order: [[0, "desc"]],
+	});
+});
+
+$(document).ready(function () {
 	$("#table-request").DataTable();
 });
 
