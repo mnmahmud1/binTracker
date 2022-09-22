@@ -32,6 +32,9 @@ Level penyelesaian Aplikasi
 -details agency (devices list) -disconnect
 -count adopt devices agency.php
 -count devices device-production.php
+21/9/2022
+-tampilkan data akhir dari history berdasar id_device
+-tampilkan lokasi di map (belum fix sinyal lemah)
 
 
 ~Agency

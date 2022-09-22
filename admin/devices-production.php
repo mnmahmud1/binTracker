@@ -10,6 +10,7 @@
 	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
 	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
 	$callAgency = mysqli_query($conn, "SELECT id, name FROM users");
+	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.id, history.id_device, history.volume, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device)");
 
 	function calculateDays($value){
 		$start  = date_create($value);
@@ -576,6 +577,11 @@
 					maxZoom: 18,
 					id: "mapbox/streets-v11",
 				}).addTo(map);
+
+				<?php foreach($callLocationDevice as $location) : ?>
+					var marker = L.marker([<?= $location["loc_lat"] ?> , <?= $location["loc_long"] ?> ]).addTo(map);
+					marker.bindPopup("<?= 'Device ID' . $location["code"] ?>").openPopup();
+				<?php endforeach ?>
 
 				// create a custom icon
 				var greenIcon = L.icon({
