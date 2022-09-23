@@ -47,9 +47,16 @@ Level penyelesaian Aplikasi
 13/9/2022
 - create request
 - show request
-23/9/2022
+23/9/2022 (pagi buta)
 -overview device list & history lists
 - mapping.php (device list) & mapp
 - device.php (device list)
 - history.php (history list)
 - add clear cookie saat sign out
+23/9/2022 (malam)
+-pair device
+setting GET nodeMCU
+SELECT history.id FROM history INNER JOIN devices ON devices.id = history.id_device WHERE devices.code = '123456' AND history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device) AND id_user IS NULL AND status IS NULL AND adopt IS NULL
+pair : 
+UPDATE history SET id_user = $IDuser, status = 'TRF', adopt = $IDuser WHERE id = $ID
+-device hanya mengirim id_device, volume, lat, long

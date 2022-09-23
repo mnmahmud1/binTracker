@@ -391,6 +391,7 @@
 													<?php
 														$deviceID = $device['id'];
 														$checkAdopted = mysqli_query($conn, "SELECT id FROM history WHERE id_device = $deviceID ORDER BY id DESC LIMIT 1");
+														$checkAdopt = mysqli_fetch_assoc($checkAdopted);
 														$checkIdentity = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
 														$checkAdoptedDevice = mysqli_fetch_assoc($checkIdentity);
 													?>
@@ -401,7 +402,7 @@
 															<span class="tcgray fs8"> Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at']))?></span>
 														</td>
 														<td>
-															<?php if(isset($checkAdopted)) : ?>
+															<?php if(isset($checkAdopt['id'])) : ?>
 																<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
 															<?php else : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">CHECKING</span>

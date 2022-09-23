@@ -124,3 +124,30 @@
         }
     }
 
+    if(isset($_POST['pairDevice'])){
+        $code = trim(htmlspecialchars($_POST['code']));
+        $username = $_COOKIE['signin'];
+
+        //! Check ID User
+        $checkID = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM users WHERE username = '$username'"));
+        $IDuser = $checkID['id'];
+
+        $checkAvailability = mysqli_query($conn, "SELECT history.id FROM history INNER JOIN devices ON devices.id = history.id_device WHERE devices.code = '$code' AND history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device) AND id_user IS NULL AND status IS NULL AND adopt IS NULL");
+        
+        if(mysqli_num_rows($checkAvailability) > 0){
+            $resultCheckAvailability = mysqli_fetch_assoc($checkAvailability);
+            $ID = $resultCheckAvailability['id'];
+            mysqli_query($conn, "UPDATE history SET id_user = $IDuser, status = 'TRF', adopt = $IDuser WHERE id = $ID");
+
+            if(mysqli_affected_rows($conn)){
+                //! if paired successfull
+                setcookie("pairDevice", "success", time() + 5, "/");
+                header('Location: devices.php');
+            }
+        } else {
+            //! if check not available / failed
+            setcookie("pairDevice", "failed", time() + 5, "/");
+            header('Location: devices.php');
+        }
+    }
+
