@@ -419,7 +419,7 @@
 															<span class="fs8 tcgray"><?= $DetailAgency['name'] ?></span>
 														</td>
 														<td class="text-break"><?= $request['message'] ?></td>
-														<td class="tcgray"><?= $request['created_at'] ?></td>
+														<td class="tcgray"><?= date('Y-m-d g:i A', strtotime($request['created_at'])) ?></td>
 														<td>
 															<?php if($request['status'] == 1) : ?>
 																<span class="badge rounded-pill text-bg-secondary px-3">DONE</span>

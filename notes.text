@@ -85,34 +85,35 @@ void loop() {
 }
 
 ~Sensor Ultrasonic (https://techatronic.com/hc-sr04-ultrasonic-sensor-working-with-esp8266-nodemcu/)
-const int trigPin = D5; 
-const int echoPin = D6; 
+const int trigPin = D3; 
+const int echoPin = D4; 
 
 long duration;
 int distance;
 
 void setup() {
-pinMode(trigPin, OUTPUT);
-pinMode(echoPin, INPUT);
-Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
 }
+
 void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
 
-digitalWrite(trigPin, LOW);
-delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
 
-digitalWrite(trigPin, HIGH);
-delayMicroseconds(10);
-digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
 
-duration = pulseIn(echoPin, HIGH);
+  distance= duration*0.034/2;
 
-distance= duration*0.034/2;
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
 
-Serial.print("Distance: ");
-Serial.println(distance);
-Serial.print(" cm");
-delay(500);
+  delay(500);
 }
 
 ~Modul GPS (https://circuitdigest.com/microcontroller-projects/interfacing-gps-with-nodemcu-esp12)
@@ -496,10 +497,11 @@ void loop(){
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
+#include <math.h>
 
 /* Set these to your desired credentials. */
-const char* ssid = "STTM-TU";  //ENTER YOUR WIFI SETTINGS
-const char* password = "Abcd1234";
+const char* ssid = "POCO X3";  //ENTER YOUR WIFI SETTINGS
+const char* password = "12345678";
 
 //Web/Server address to read/write from 
 //website or IP address of server
@@ -535,16 +537,15 @@ void setup() {
 
 void loop() {
   HTTPClient http;    //Declare object of class HTTPClient
-  WiFiClient wifi;
+  WiFiClient wifi;    //Declare object of class WiFiClient
 
-  String code = "APAKEK";
-  String getData, Link;
+  String code = "MAHMUD", getData, Link, Url = "192.168.21.147";
   int volume = 34;
-  double latitude = -6.428066, longitude = 106.9476664;
+  String latitude = "-6.3991224", longitude = "106.9659016";
 
   //GET Data
   getData = "code='" + code + "'&volume=" + volume + "&lat=" + latitude + "&long=" + longitude ;  //Note "?" //added at front
-  Link = "http://192.168.21.147/binTracker/create_history.php?createHistory=1&" + getData;
+  Link = "http://" + Url + "/binTracker/create_history.php?createHistory=1&" + getData;
 
   http.begin(wifi, Link);     //Specify request destination
 
@@ -557,4 +558,173 @@ void loop() {
   http.end();  //Close connection
 
   delay(5000);  //GET Data at every 5 seconds
+}
+
+
+~~ ALL IN MODULE
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
+
+#define GPSLED D5   // Led in NodeMCU at pin (D5).
+#define WIFILED D6  // Led in NodeMCU at pin (D6).
+#define echoPin D3  // echoPin in HC-SR04 at pin (D3).
+#define trigPin D4  // trigPin in HC-SR04 at pin (D4).
+
+TinyGPSPlus gps;  // The TinyGPS++ object
+HTTPClient http;  // Declare object of class HTTPClient
+WiFiClient wifi;  // Declare object of class WiFiClient
+
+SoftwareSerial ss(4, 5);  // The serial connection to the GPS device
+
+// Const Variable
+const char* ssid = "POCO X3";
+const char* password = "12345678";
+const String code = "MAHMUD";         // Unique Code Device
+const String Url = "mnmahmud.my.id";  // IP or Server Address
+
+// Declare Ultrasonic Sensor
+long duration;
+int distance;
+
+float latitude, longitude;
+String lat_str, long_str;
+
+String getData, Link;
+int calibration, volume, resultVolume;  // Calibration Earlier & Volume Bin Now
+
+void setup() {
+  // Declare LED
+  pinMode(GPSLED, OUTPUT);
+  pinMode(WIFILED, OUTPUT);
+
+  // Declare HC-SR04
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  ss.begin(9600);
+  delay(1000);
+  Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);  //Prevents reconnection issue (taking too long to connect)
+  delay(1000);
+  WiFi.mode(WIFI_STA);  //This line hides the viewing of ESP as wifi hotspot
+
+  WiFi.begin(ssid, password);  //Connect to your WiFi router
+  Serial.println("");
+
+  Serial.print("Connecting");
+  // Wait for connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  //If connection successful show IP address in serial monitor
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());  //IP address assigned to your ESP
+
+  digitalWrite(WIFILED, LOW);
+  delay(500);
+  digitalWrite(WIFILED, HIGH);  //Turn ON LED Wifi Yellow If WiFi Connected
+
+  // Calibrate Ulrasonic Sensor HC-SR04
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    calibration = duration * 0.034 / 2;
+
+    Serial.print("Calibration : ");
+    Serial.print(calibration);
+    Serial.println(" cm");
+
+    delay(1000);  //Delay Calibration Arduino
+  }
+
+  Serial.println("");
+}
+
+void loop() {
+
+  Serial.println("Checking GPS. ");
+
+  while (ss.available() > 0) {
+    if (gps.encode(ss.read())) {
+      if (gps.location.isValid()) {
+        latitude = gps.location.lat();
+        lat_str = String(latitude, 6);
+        longitude = gps.location.lng();
+        long_str = String(longitude, 6);
+
+        digitalWrite(GPSLED, LOW);
+        delay(1000);
+        digitalWrite(GPSLED, HIGH);
+        delay(1000);  // Turn the LED off by making the voltage HIGH
+
+        Serial.println("GPS Signal Found!");
+        Serial.print("Latitude : ");
+        Serial.println(lat_str);
+        Serial.print("Longitude : ");
+        Serial.println(long_str);
+        Serial.println("");
+
+        // --------------------------------------
+        // IF GPS Signal Found / Sensor Ultrasonic have calibrate / Try to Send Data
+
+        delay(1000);
+        digitalWrite(trigPin, LOW);
+        delayMicroseconds(2);
+
+        digitalWrite(trigPin, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(trigPin, LOW);
+
+        duration = pulseIn(echoPin, HIGH);
+
+        volume = duration * 0.034 / 2;
+
+        Serial.print("Volume : ");
+        Serial.print(volume);
+        Serial.println(" cm");
+
+        Serial.print("Caliration : ");
+        Serial.print(calibration);
+        Serial.println(" cm");
+
+        /// Calibration Volume
+        resultVolume = (((100 * volume) / calibration) - 100) * (-1);  // Check % volume
+
+        Serial.print("Result Volume % calibration : ");
+        Serial.print(resultVolume);
+        Serial.println("%");
+
+        //GET Data
+        getData = "code='" + code + "'&volume=" + resultVolume + "&lat=" + lat_str + "&long=" + long_str;  //Note "?" //added at front
+        Link = "http://" + Url + "/binTracker/create_history.php?createHistory=1&" + getData;
+
+        http.begin(wifi, Link);  //Specify request destination
+
+        int httpCode = http.GET();          //Send the request
+        String payload = http.getString();  //Get the response payload
+
+        Serial.println(httpCode);  //Print HTTP return code
+        Serial.println(payload);   //Print request response payload
+
+        http.end();  //Close connection
+      }
+    }
+  }
+
+  delay(1000);  //Delay Regular Loop
 }

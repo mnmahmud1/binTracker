@@ -236,7 +236,7 @@
 													<th>Name</th>
 													<th>Adopted Devices</th>
 													<th>Status</th>
-													<th>Register Date</th>
+													<th>Register at</th>
 													<th></th>
 												</tr>
 											</thead>
