@@ -9,8 +9,6 @@
 
         $code = $_GET['code'];
         $volume = $_GET['volume'];
-        $lat = $_GET['lat'];
-        $long = $_GET['long'];
         $created_at = date('Y-m-d H:i:s');
 
         $callHistory = mysqli_query($conn, "SELECT history.id_device, history.id_user, history.status, history.adopt, devices.id AS ID_Device FROM history INNER JOIN devices ON history.id_device = devices.id WHERE history.id IN (SELECT max(history.id) FROM history GROUP BY history.id_device) AND history.id_device = (SELECT id FROM devices WHERE code = $code)");
@@ -26,13 +24,13 @@
             var_dump('masuk 1'); //Hanya Checking
             var_dump($idDevice); //Hanya Checking
 
-            mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long, created_at) VALUES ($idDevice, $volume, '$lat', '$long', '$created_at')");
+            mysqli_query($conn, "INSERT INTO history (id_device, volume, created_at) VALUES ($idDevice, $volume, '$created_at')");
         } elseif (mysqli_num_rows($callHistory) > 0 AND isset($history['id_user'])){
             // Row found / device have adopt other users
             $idDevice = $callID['id'];
             $idUser = $history['id_user'];
             var_dump('masuk 2'); //Hanya Checking
-            mysqli_query($conn, "INSERT INTO history (id_device, id_user, volume, loc_lat, loc_long, created_at) VALUES ($idDevice, $idUser, $volume, '$lat', '$long', '$created_at')");
+            mysqli_query($conn, "INSERT INTO history (id_device, id_user, volume, created_at) VALUES ($idDevice, $idUser, $volume, '$created_at')");
         }
     }
 

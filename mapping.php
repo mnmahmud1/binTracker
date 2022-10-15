@@ -10,7 +10,7 @@
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
 	$callDevices = mysqli_query($conn, "SELECT devices.code, history.volume, devices.description, history.created_at FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
-	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
+	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, devices.loc_lat, devices.loc_long FROM devices INNER JOIN history ON history.id_device = devices.id WHERE history.adopt IN (SELECT history.adopt FROM history GROUP BY history.id_user) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +42,9 @@
 
 		<!-- Leaflet Map JS -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+
+		<!-- Leaflet Routing Machine -->
+		<link rel="stylesheet" href="dist/js/leaflet-routing-machine.css" />
 
 		<!-- My configuration css -->
 		<link rel="stylesheet" href="dist/css/style.css" />
@@ -271,46 +274,78 @@
 
 		<!-- Leaflet JS -->
 		<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+		
+		<!-- Leaflet Routing Machine -->
+		<script src="dist/js/leaflet-routing-machine.js"></script>
 
 		<!-- Local Script JS -->
 		<script>
-			window.onload = getLocation;
 
-			// Get My Location
-			function getLocation() {
-				if (navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(showPosition);
-				} else {
-					x.innerHTML = "Your browser is not Support!";
+			<?php if(isset($_COOKIE["trackLat"]) AND isset($_COOKIE["trackLong"])) : ?>
+				window.onload = getLocation;
+				
+				// Get My Location
+				function getLocation() {
+					if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(showPosition);
+					} else {
+						x.innerHTML = "Your browser is not Support!";
+					}
 				}
-			}
 
-			function showPosition(position) {
-				var map = L.map("map").setView([position.coords.latitude, position.coords.longitude], 13);
+				function showPosition(position) {
+					var map = L.map("map").setView([position.coords.latitude, position.coords.longitude], 13);
 
-				L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-					maxZoom: 18,
-					id: "mapbox/streets-v11",
-				}).addTo(map);
+					L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+						maxZoom: 18,
+						id: "mapbox/streets-v11",
+					}).addTo(map);
 
-				<?php foreach($callLocationDevice as $location) : ?>
-					var marker = L.marker([<?= $location["loc_lat"] ?> , <?= $location["loc_long"] ?> ]).addTo(map);
-					marker.bindPopup("<?= 'Device ID' . $location["code"] ?>").openPopup();
-				<?php endforeach ?>
+					L.Routing.control({
+                        waypoints: [L.latLng(position.coords.latitude, position.coords.longitude), L.latLng(<?= $_COOKIE["trackLat"] ?>, <?= $_COOKIE["trackLong"] ?>)],
+                        routeWhileDragging: false,
+                    }).addTo(map);
+				}
+			<?php else : ?>
+				window.onload = getLocation;
 
-				// create a custom icon
-				var greenIcon = L.icon({
-					iconUrl: "dist/img/icon.png",
+				// Get My Location
+				function getLocation() {
+					if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(showPosition);
+					} else {
+						x.innerHTML = "Your browser is not Support!";
+					}
+				}
 
-					iconSize: [45, 52], // size of the icon
-					iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-					shadowAnchor: [4, 62], // the same for the shadow
-					popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
-				});
+				function showPosition(position) {
+					var map = L.map("map").setView([position.coords.latitude, position.coords.longitude], 13);
 
-				let markerMe = L.marker([position.coords.latitude, position.coords.longitude], { icon: greenIcon }).addTo(map);
-				markerMe.bindPopup("Lokasi Anda").openPopup();
-			}
+					L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+						maxZoom: 18,
+						id: "mapbox/streets-v11",
+					}).addTo(map);
+
+					<?php foreach($callLocationDevice as $location) : ?>
+						var marker = L.marker([<?= $location["loc_lat"] ?> , <?= $location["loc_long"] ?> ]).addTo(map);
+						marker.bindPopup("<?= 'Device ID' . $location["code"] ?>" + "<br> <a href=function.php?trackingNow=1&lat=" + <?= $location["loc_lat"] ?> + "&long=" + <?= $location["loc_long"] ?> + " class='btn btn-sm text-white mt-2 btn-success text-center'> Track Now </a> ").openPopup();
+					<?php endforeach ?>
+
+					// create a custom icon
+					var greenIcon = L.icon({
+						iconUrl: "dist/img/icon.png",
+
+						iconSize: [45, 52], // size of the icon
+						iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+						shadowAnchor: [4, 62], // the same for the shadow
+						popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+					});
+
+					let markerMe = L.marker([position.coords.latitude, position.coords.longitude], { icon: greenIcon }).addTo(map);
+					markerMe.bindPopup("Lokasi Anda").openPopup();
+					
+				}
+			<?php endif ?>
 		</script>
 
 		<!-- My JS Configuration -->

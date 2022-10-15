@@ -8,7 +8,7 @@
     // Sign in Admin
     if(isset($_POST['signinAdmin'])){
         $username = trim(htmlspecialchars($_POST['username']));
-        $password = trim($_POST['password']);
+        $password = $_POST['password'];
         
         $getUser = mysqli_query($conn, "SELECT username, password FROM admin WHERE username = '$username'");
 
@@ -18,11 +18,11 @@
                 setcookie("signinAdmin", $username, time() + (3600 * 3), "/");
                 header("Location: index.php");
             }
-        } else {
-            //! if login is fail give cookie and page detect alert from cookie
-            setcookie("signin", "failed", time() + 5, "/");
-            header("Location: signin.php");
         }
+        
+        //! if login is fail give cookie and page detect alert from cookie
+        setcookie("sign", "failed", time() + 5, "/");
+        header("Location: signin.php");
     }
 
     // Sign Out Admin
@@ -206,11 +206,14 @@
     if(isset($_POST['connectDevice'])){
         $code = trim(htmlspecialchars($_POST['code']));
         $description = trim(htmlspecialchars($_POST['description']));
+        $lat = trim(htmlspecialchars($_POST['lat']));
+        $long = trim(htmlspecialchars($_POST['long']));
+        
 
         $checkCode = mysqli_query($conn, "SELECT id FROM devices WHERE code = '$code'");
 
         if(mysqli_num_rows($checkCode) == 0){
-            mysqli_query($conn, "INSERT INTO devices (code, description, created_at) VALUES ('$code', '$description', '$created_at')");
+            mysqli_query($conn, "INSERT INTO devices (code, description, loc_lat, loc_long, created_at) VALUES ('$code', '$description', '$lat', '$long', '$created_at')");
     
             if(mysqli_affected_rows($conn)){
                 //! if insert device was successfull
@@ -236,18 +239,16 @@
         $deviceID = $_COOKIE['deviceID'];
         $agencyStart = $_COOKIE['agencyIDStart'];
 
-        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
+        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
         // mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long) SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1");
         $id = $update['id'];
         $id_device = $update['id_device'];
         $volume = $update['volume'];
-        $loc_lat = $update['loc_lat'];
-        $loc_long = $update['loc_long'];
 
         mysqli_query($conn, "UPDATE history SET adopt = NULL WHERE id = $id");
         
         if(mysqli_affected_rows($conn)){
-            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$loc_lat', '$loc_long', '$created_at')");
+            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$created_at')");
             //! if transfer device was successfull
             if(mysqli_affected_rows($conn)){
                 //! if transfer device was successfull
@@ -272,18 +273,16 @@
         $deviceID = $_COOKIE['deviceID'];
         $agencyStart = $_COOKIE['agencyIDStart'];
 
-        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
+        $update = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id, id_device, volume FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1"));
         // mysqli_query($conn, "INSERT INTO history (id_device, volume, loc_lat, loc_long) SELECT id_device, volume, loc_lat, loc_long FROM history WHERE id_device=$deviceID AND id_user = $agencyStart ORDER BY id DESC LIMIT 1");
         $id = $update['id'];
         $id_device = $update['id_device'];
         $volume = $update['volume'];
-        $loc_lat = $update['loc_lat'];
-        $loc_long = $update['loc_long'];
 
         mysqli_query($conn, "UPDATE history SET adopt = NULL WHERE id = $id");
         
         if(mysqli_affected_rows($conn)){
-            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, loc_lat, loc_long, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$loc_lat', '$loc_long', '$created_at')");
+            mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$created_at')");
             //! if transfer device was successfull
             if(mysqli_affected_rows($conn)){
                 //! if transfer device was successfull

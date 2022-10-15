@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Best Route</title>
+		<style>
+			body {
+				margin: 0;
+			}
+			#map {
+				width: 100vw;
+				height: 100vh;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="map"></div>
+	</body>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+	<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+	<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+	<script>
+		let map = L.map("map").setView([-3.795529316237563, 114.784255027771], 13);
+		let latLng1 = L.latLng(-3.795529316237563, 114.784255027771);
+		let latLng2 = L.latLng(-3.807048146256088, 114.77391242980958);
+		let latLng3 = L.latLng(-3.7923423432432, 114.7976769629);
+		let wp1 = new L.Routing.Waypoint(latLng1);
+		let wp2 = new L.Routing.Waypoint(latLng2);
+		let wp3 = new L.Routing.Waypoint(latLng3);
+
+		L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		}).addTo(map);
+
+		L.Routing.control({
+			waypoints: [latLng1, latLng2],
+		}).addTo(map);
+
+		var marker1 = L.marker([-3.7923423432432, 114.7976769629]).addTo(map);
+
+		// let routeUs = L.Routing.osrmv1();
+		// routeUs.route([wp1, wp2], (err, routes) => {
+		// 	if (!err) {
+		// 		let best = 100000000000000;
+		// 		let bestRoute = 0;
+		// 		for (i in routes) {
+		// 			if (routes[i].summary.totalDistance < best) {
+		// 				bestRoute = i;
+		// 				best = routes[i].summary.totalDistance;
+		// 			}
+		// 		}
+		// 		console.log("best route", routes[bestRoute]);
+		// 		L.Routing.line(routes[bestRoute], {
+		// 			styles: [
+		// 				{
+		// 					color: "green",
+		// 					weight: "10",
+		// 				},
+		// 			],
+		// 		}).addTo(map);
+		// 	}
+		// });
+	</script>
+</html>

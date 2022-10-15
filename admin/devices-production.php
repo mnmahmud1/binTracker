@@ -10,7 +10,7 @@
 	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
 	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
 	$callAgency = mysqli_query($conn, "SELECT id, name FROM users");
-	$callLocationDevice = mysqli_query($conn, "SELECT devices.code, history.loc_lat ,history.loc_long FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(history.id) FROM history GROUP BY history.id_device)");
+	$callLocationDevice = mysqli_query($conn, "SELECT code, loc_lat, loc_long FROM devices");
 
 	function calculateDays($value){
 		$start  = date_create($value);
@@ -68,8 +68,16 @@
 		<!-- Datatables -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css" />
 
-		<!-- Leaflet Map JS -->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+		<!-- Load Leaflet from CDN -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+		<!-- Load Esri Leaflet from CDN -->
+		<script src="https://unpkg.com/esri-leaflet@2.5.0/dist/esri-leaflet.js" integrity="sha512-ucw7Grpc+iEQZa711gcjgMBnmd9qju1CICsRaryvX7HJklK0pGl/prxKvtHwpgm5ZHdvAil7YPxI1oWPOWK3UQ==" crossorigin=""></script>
+
+		<!-- Load Esri Leaflet Geocoder from CDN -->
+		<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css" integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g==" crossorigin="" />
+		<script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js" integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA==" crossorigin=""></script>
 
 		<!-- My configuration css -->
 		<link rel="stylesheet" href="../dist/css/style.css" />
@@ -375,7 +383,7 @@
 										<span class="badge rounded-pill text-bg-secondary px-3">MAINTENANCE</span>
 										<span class="badge rounded-pill text-bg-danger px-3">LOST</span> -->
 
-										<table class="display" id="table-device">
+										<table class="display table-responsive-lg" id="table-device">
 											<thead>
 												<tr>
 													<th>#</th>
@@ -469,7 +477,7 @@
 
 		<!-- Modal Pair #1 -->
 		<div class="modal fade" id="connectDevice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="connectDeviceLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<form action="function.php" method="post">
 						<div class="modal-header">
@@ -477,14 +485,39 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<div class="mb-3">
-								<label for="code" class="form-label fw-bolder text-gray-800">Unique Code</label>
-								<input type="text" name="code" id="code" class="form-control" maxlength="6" placeholder="Enter your 6 digit device unique code" autofocus required />
+							<div class="row">
+								<div class="col-sm">
+									<div class="mb-3">
+										<label for="code" class="form-label fw-bolder text-gray-800">Unique Code</label>
+										<input type="text" name="code" id="code" class="form-control" maxlength="6" placeholder="Enter your 6 digit device unique code" autofocus required />
+									</div>
+									<div class="mb-3">
+										<label for="description" class="form-label">Description</label>
+										<textarea name="description" id="description" class="form-control" placeholder="Perangkat ada di dekat minimarket" required></textarea>
+									</div>
+									<div class="row">
+										<div class="col-sm">
+											<div class="mb-3">
+												<label for="lat" class="form-label">Latitude</label>
+												<input type="text" name="lat" id="lat" class="form-control" placeholder="Latitude" maxlength="30" required>
+											</div>
+										</div>
+										<div class="col-sm">
+											<div class="mb-3">
+												<label for="long" class="form-label">Longitude</label>
+												<input type="text" name="long" id="long" class="form-control" placeholder="Longitude" maxlength="30" required>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm">
+									<label class="form-label">Select Location From Maps</label>
+									<div class="card">
+										<div class="card-body shadow" id="get-map" style="height: 300px"></div>
+									</div>
+								</div>
 							</div>
-							<div class="mb-3">
-								<label for="description" class="form-label">Description</label>
-								<textarea name="description" id="description" class="form-control" placeholder="Perangkat ada di dekat minimarket" required></textarea>
-							</div>
+							
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-white" data-bs-dismiss="modal" tabindex="1">Close</button>
@@ -556,9 +589,6 @@
 		<!-- CDN SweetAlert -->
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-		<!-- Leaflet JS -->
-		<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
-
 		<!-- Local Script JS -->
 		<script>
 			window.onload = getLocation;
@@ -567,6 +597,7 @@
 			function getLocation() {
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(showPosition);
+					navigator.geolocation.getCurrentPosition(getLatLong);
 				} else {
 					x.innerHTML = "Your browser is not Support!";
 				}
@@ -597,6 +628,36 @@
 
 				let markerMe = L.marker([position.coords.latitude, position.coords.longitude], { icon: greenIcon }).addTo(map);
 				markerMe.bindPopup("Lokasi Anda").openPopup();
+			}
+			
+			function getLatLong(position){
+				// GET Latitude & Longitude
+				var getMap = L.map("get-map").setView([position.coords.latitude, position.coords.longitude], 13);
+				
+				L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+					attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+				}).addTo(getMap);
+				
+				var gcs = L.esri.Geocoding.geocodeService();
+				
+				getMap.on("click", e => {
+					gcs.reverse()
+					.latlng(e.latlng)
+					.run((err, res) => {
+						if (err) return;
+						// alert(res.latlng);
+						let latLong = res.latlng;
+						let str = latLong.toString();
+
+						let latitude = str.split('LatLng(').pop().split(', ')[0];
+						let longitude = str.split('LatLng(').pop().split(', ').pop().split(')')[0];
+
+						$('#lat').val(latitude);
+						$('#long').val(longitude);
+
+						L.marker(res.latlng).addTo(getMap).bindPopup(res.address.Match_addr).openPopup();
+					});
+				});
 			}
 		</script>
 		

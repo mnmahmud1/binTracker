@@ -180,7 +180,7 @@
 			<!-- Content Wrapper -->
 			<div id="content-wrapper" class="d-flex flex-column">
 				<!-- Main Content -->
-				<div id="content" class="px-2">
+				<div id="content" class="px-2 mb-2">
 					<!-- Begin Page Content -->
 					<div class="container-fluid mt-4">
 						<!-- Page Heading -->
@@ -238,7 +238,7 @@
 				</div>
 				<!-- End of Main Content -->
 
-				<div id="content" class="mb-2 px-2">
+				<div id="content" class="mb-2 px-2" hidden>
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-12">

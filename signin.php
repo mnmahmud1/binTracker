@@ -23,7 +23,7 @@
 			</div>
 		</div>
 
-		<?php if(isset($_COOKIE["signin"]) && $_COOKIE["signin"] == "failed") : ?>
+		<?php if(isset($_COOKIE["sign"]) && $_COOKIE["sign"] == "failed") : ?>
 			<div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
@@ -70,13 +70,13 @@
 
 							<form action="function.php" method="POST">
 								<div class="mb-4">
-									<label for="username" class="form-label fw-bolder tcgray">USERNAME <span class="t400">OR</span> EMAIL</label>
+									<label for="username" class="form-label fw-bolder tcgray">USERNAME</label>
 									<input type="text" name="username" id="username" class="form-control p-3" placeholder="Type your username" maxlength="20" autofocus required />
 								</div>
 								<div class="mb-4">
 									<div class="d-flex justify-content-between align-items-baseline">
 										<label for="password" class="form-label fw-bolder tcgray">PASSWORD</label>
-										<a href="forgot-password.php" class="text-decoration-none tcgray fs8" tabindex="1">Forgot Password?</a>
+										<a href="forgot-password.php" class="text-decoration-none tcgray fs8" tabindex="1" hidden>Forgot Password?</a>
 									</div>
 									<input type="password" name="password" id="password" class="form-control p-3" placeholder="Type your password" required />
 								</div>

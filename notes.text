@@ -728,3 +728,350 @@ void loop() {
 
   delay(1000);  //Delay Regular Loop
 }
+
+
+~~ Driver NodeMCU LOLIN LUA
+https://kelasrobot.com/cara-install-usb-driver-ch340g-ch340-untuk-arduino/
+
+
+
+~~FIX CODE without GPS NEO 6M
+
+#include <SoftwareSerial.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
+
+#define WIFILED D8  // Led in NodeMCU at pin (D8).
+#define echoPin D3  // echoPin in HC-SR04 at pin (D3).
+#define trigPin D4  // trigPin in HC-SR04 at pin (D4).
+
+HTTPClient http;  // Declare object of class HTTPClient
+WiFiClient wifi;  // Declare object of class WiFiClient
+
+// Const Variable
+const char* ssid = "POCO X3";
+const char* password = "aaaaaaaa";
+const String code = "MAHMUD";         // Unique Code Device
+const String Url = "mnmahmud.my.id";  // IP or Server Address
+
+// Declare Ultrasonic Sensor
+long duration;
+int distance;
+
+String lat_str, long_str;
+
+String getData, Link;
+int calibration, volume, resultVolume;  // Calibration Earlier & Volume Bin Now
+
+void setup() {
+  // Declare LED
+  pinMode(WIFILED, OUTPUT);
+
+  // Declare HC-SR04
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  delay(1000);
+  Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);  //Prevents reconnection issue (taking too long to connect)
+  delay(1000);
+  WiFi.mode(WIFI_STA);  //This line hides the viewing of ESP as wifi hotspot
+
+  WiFi.begin(ssid, password);  //Connect to your WiFi router
+  Serial.println("");
+
+  Serial.print("Connecting");
+  // Wait for connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  //If connection successful show IP address in serial monitor
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());  //IP address assigned to your ESP
+
+  digitalWrite(WIFILED, LOW);
+  delay(500);
+  digitalWrite(WIFILED, HIGH);  //Turn ON LED Wifi Yellow If WiFi Connected
+
+  // Calibrate Ulrasonic Sensor HC-SR04
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    calibration = duration * 0.034 / 2;
+
+    Serial.print("Calibration : ");
+    Serial.print(calibration);
+    Serial.println(" cm");
+
+    delay(2000);  //Delay Calibration Arduino
+  }
+
+  Serial.println("");
+}
+
+void loop() {
+  // --------------------------------------
+  // Sensor Ultrasonic have calibrate / Try to Send Data
+  delay(1000);
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  volume = duration * 0.034 / 2;
+
+  Serial.print("Volume : ");
+  Serial.print(volume);
+  Serial.println(" cm");
+
+  Serial.print("Caliration : ");
+  Serial.print(calibration);
+  Serial.println(" cm");
+
+  /// Calibration Volume
+  resultVolume = (((100 * volume) / calibration) - 100) * (-1);  // Check % volume
+
+  Serial.print("Result Volume % calibration : ");
+  Serial.print(resultVolume);
+  Serial.println("%");
+
+  //GET Data
+  getData = "code='" + code + "'&volume=" + resultVolume;  //Note "?" //added at front
+  Link = "http://" + Url + "/binTracker/create_history.php?createHistory=1&" + getData;
+
+  http.begin(wifi, Link);  //Specify request destination
+
+  int httpCode = http.GET();          //Send the request
+  String payload = http.getString();  //Get the response payload
+
+  Serial.println(httpCode);  //Print HTTP return code
+  Serial.println(payload);   //Print request response payload
+
+  http.end();  //Close connection
+
+  delay(5000);  //Delay Regular Loop
+}
+
+
+
+
+~~ GET Latitude & Longitude FROM Leaflet.JS
+https://gis.stackexchange.com/questions/39055/getting-lat-long-of-clicked-location-using-leaflet-api
+https://github.com/CTRLTAB-WORKS/reverse-geocoding
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Reverse geocoding from map</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Load Leaflet from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.5.0/dist/esri-leaflet.js"
+    integrity="sha512-ucw7Grpc+iEQZa711gcjgMBnmd9qju1CICsRaryvX7HJklK0pGl/prxKvtHwpgm5ZHdvAil7YPxI1oWPOWK3UQ=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet Geocoder from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+    crossorigin=""></script>
+
+  <style>
+    body { margin:0; padding:0; }
+    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+
+  var map = L.map('map').setView([0,0], 2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var gcs = L.esri.Geocoding.geocodeService();
+
+  map.on('click', (e)=>{
+    gcs.reverse().latlng(e.latlng).run((err, res)=>{
+      if(err) return;
+      alert(res.latlng);
+      L.marker(res.latlng).addTo(map).bindPopup(res.address.Match_addr).openPopup();
+    });
+  });
+  
+</script>
+
+</body>
+</html>
+
+
+~~ FInish
+#include <SoftwareSerial.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
+
+#define WIFILED D8  // Led in NodeMCU at pin (D8).
+#define CALLED D7  // Led in NodeMCU at pin (D7).
+#define echoPin D3  // echoPin in HC-SR04 at pin (D3).
+#define trigPin D4  // trigPin in HC-SR04 at pin (D4).
+
+HTTPClient http;  // Declare object of class HTTPClient
+WiFiClient wifi;  // Declare object of class WiFiClient
+
+// Const Variable
+const char* ssid = "POCO X3";
+const char* password = "aaaaaaaa";
+const String code = "MAHMUD";         // Unique Code Device
+const String Url = "mnmahmud.my.id";  // IP or Server Address
+
+// Declare Ultrasonic Sensor
+long duration;
+int distance;
+
+String lat_str, long_str;
+
+String getData, Link;
+int calibration, volume, resultVolume;  // Calibration Earlier & Volume Bin Now
+
+void setup() {
+  // Declare LED
+  pinMode(WIFILED, OUTPUT);
+  pinMode(CALLED, OUTPUT);
+
+  // Declare HC-SR04
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  delay(1000);
+  Serial.begin(115200);
+  WiFi.mode(WIFI_OFF);  //Prevents reconnection issue (taking too long to connect)
+  delay(1000);
+  WiFi.mode(WIFI_STA);  //This line hides the viewing of ESP as wifi hotspot
+
+  WiFi.begin(ssid, password);  //Connect to your WiFi router
+  Serial.println("");
+
+  Serial.print("Connecting");
+  // Wait for connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  //If connection successful show IP address in serial monitor
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println(ssid);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());  //IP address assigned to your ESP
+
+  digitalWrite(WIFILED, LOW);
+  delay(500);
+  digitalWrite(WIFILED, HIGH);  //Turn ON LED Wifi Yellow If WiFi Connected
+
+  // Calibrate Ulrasonic Sensor HC-SR04
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    calibration = duration * 0.034 / 2;
+
+    Serial.print("Calibration : ");
+    Serial.print(calibration);
+    Serial.println(" cm");
+
+    delay(2000);  //Delay Calibration Arduino
+  }
+
+  digitalWrite(CALLED, LOW);
+  delay(500);
+  digitalWrite(CALLED, HIGH);  //Turn ON LED Wifi Yellow If Calibrate Was Success Fully
+
+  Serial.println("");
+}
+
+void loop() {
+  // --------------------------------------
+  // Sensor Ultrasonic have calibrate / Try to Send Data
+  delay(1000);
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  volume = duration * 0.034 / 2;
+
+  Serial.print("Volume : ");
+  Serial.print(volume);
+  Serial.println(" cm");
+
+  Serial.print("Caliration : ");
+  Serial.print(calibration);
+  Serial.println(" cm");
+
+  /// Calibration Volume
+  resultVolume = (((100 * volume) / calibration) - 100) * (-1);  // Check % volume
+
+  Serial.print("Result Volume % calibration : ");
+  Serial.print(resultVolume);
+  Serial.println("%");
+
+  //GET Data
+  getData = "code='" + code + "'&volume=" + resultVolume;  //Note "?" //added at front
+  Link = "http://" + Url + "/binTracker/create_history.php?createHistory=1&" + getData;
+
+  http.begin(wifi, Link);  //Specify request destination
+
+  int httpCode = http.GET();          //Send the request
+  String payload = http.getString();  //Get the response payload
+
+  Serial.println(httpCode);  //Print HTTP return code
+  Serial.println(payload);   //Print request response payload
+
+  http.end();  //Close connection
+
+  delay(5000);  //Delay Regular Loop
+}

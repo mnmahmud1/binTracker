@@ -186,7 +186,7 @@
 				</div>
 				<!-- End of Main Content -->
 
-				<div class="content mb-2">
+				<div class="content mb-2" hidden>
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-12">
@@ -200,7 +200,7 @@
 					</div>
 				</div>
 
-				<div class="content">
+				<div class="content mt-2">
 					<div class="container-fluid mb-3">
 						<div class="row">
 							<div class="col-sm-6">

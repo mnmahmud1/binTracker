@@ -20,7 +20,7 @@
         }
 
         //! if login is fail give cookie and page detect alert from cookie
-        setcookie("signin", "failed", time() + 5, "/");
+        setcookie("sign", "failed", time() + 5, "/");
         header("Location: signin.php");
     }
 
@@ -151,3 +151,12 @@
         }
     }
 
+    if(isset($_GET['trackingNow'])){
+        $lat = $_GET['lat'];
+        $long = $_GET['long'];
+        
+        setcookie("trackLat", $lat, time() + 500, "/");
+        setcookie("trackLong", $long, time() + 500, "/");
+
+        header('Location: mapping.php');
+    }

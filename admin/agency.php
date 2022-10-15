@@ -229,7 +229,7 @@
 											</div>
 										</div>
 
-										<table class="display" id="table-registered-agency">
+										<table class="display table-responsive-lg" id="table-registered-agency">
 											<thead>
 												<tr>
 													<th>#</th>
