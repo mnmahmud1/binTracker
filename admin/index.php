@@ -6,12 +6,12 @@
 	
 	require '../conn.php';
 
-	$callRequests = mysqli_query($conn, "SELECT title, status, created_at FROM requests ORDER BY created_at DESC LIMIT 5");
+	$callRequests = mysqli_query($conn, "SELECT requests.title, requests.created_at, requests.status FROM requests INNER JOIN users ON requests.id_user=users.id ORDER BY created_at DESC LIMIT 5");
 	$callDevices = mysqli_query($conn, "SELECT code, created_at FROM devices");
 
 	$calcAgency = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM users"));
-	$calcDoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 1"));
-	$calcUndoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM requests WHERE status = 0"));
+	$calcDoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT requests.id FROM requests INNER JOIN users ON requests.id_user=users.id WHERE requests.status = 1"));
+	$calcUndoneRequest = mysqli_num_rows(mysqli_query($conn, "SELECT requests.id FROM requests INNER JOIN users ON requests.id_user=users.id WHERE requests.status = 0"));
 
 
 ?>
@@ -59,7 +59,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -75,7 +75,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -91,7 +91,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -271,7 +271,7 @@
 											<?php foreach($callDevices as $device) : ?>
 												<li class="list-group-item">
 													<div class="d-flex justify-content-between">
-														<span>Device ID<?= $device['code'] ?></span>
+														<span>Device ID <span class="fw-bold"><?= $device['code'] ?></span></span>
 														<span class="fs8 tcgray"><?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></span>
 													</div>
 												</li>

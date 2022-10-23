@@ -5,6 +5,7 @@
 	}
 
 	require 'conn.php';
+	date_default_timezone_set("Asia/Jakarta");
 	
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
@@ -159,8 +160,11 @@
 								<div class="card">
 									<div class="card-body">
 										<div class="row mb-4">
-											<div class="col text-start">
+											<div class="col d-flex justify-content-between">
 												<span class="h6 fw-bold text-gray-800"> Devices List </span>
+												<button type="button" class="btn btn-sm btn-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Reload Tracking" onclick="window.location.href = 'function.php?deleteCookieLoc=1'">
+													<i class="fa-solid fa-rotate"></i>
+												</button>
 											</div>
 										</div>
 
@@ -178,11 +182,27 @@
 												<?php $i=1; foreach ($callDevices as $device) : ?>
 													<tr>
 														<td><?= $i ?></td>
-														<td>Device ID<span class="fw-bold"><?= $device['code'] ?></span> </td>
+														<td>Device ID <span class="fw-bold"><?= $device['code'] ?></span> </td>
 														<td>
-															<?php if($device['volume'] < 100 ) : ?>
-																<span class="badge rounded-pill text-bg-success px-3"><?= $device['volume'] ?>/100</span>
-															<?php elseif($device['volume'] == 100 ) : ?>
+															<?php
+																$now_date = date('Y-m-d H:i:s'); // the current date
+																$date1 = $device['created_at'];
+																$timestamp1 = strtotime($date1);
+																$timestamp2 = strtotime($now_date);
+																$hour = floor($timestamp2 - $timestamp1)/(60*60);
+															?>
+															
+															<?php if($hour >= 1) : ?>
+																<span class="badge rounded-pill bg-danger px-3">MAINTENANCE</span>
+															<?php endif ?>
+
+															<?php if($device['volume'] < 75 ) : ?>
+																<?php if($device['volume'] < 0 ) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">0/100</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-success px-3"><?= $device['volume'] ?>/100</span>
+																<?php endif ?>
+															<?php elseif($device['volume'] >= 75 ) : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
 															<?php endif ?>
 														</td>
@@ -194,7 +214,7 @@
 															</button>
 														</td> -->
 													</tr>
-												<?php $i++; endforeach ?>
+												<?php $i++; $hour = 0; endforeach ?>
 											</tbody>
 										</table>
 									</div>
@@ -305,6 +325,11 @@
                         waypoints: [L.latLng(position.coords.latitude, position.coords.longitude), L.latLng(<?= $_COOKIE["trackLat"] ?>, <?= $_COOKIE["trackLong"] ?>)],
                         routeWhileDragging: false,
                     }).addTo(map);
+
+					<?php foreach($callLocationDevice as $location) : ?>
+						var marker = L.marker([<?= $location["loc_lat"] ?> , <?= $location["loc_long"] ?> ]).addTo(map);
+						marker.bindPopup("<?= 'Device ID' . $location["code"] ?>" + "<br> <a href=function.php?trackingNow=1&lat=" + <?= $location["loc_lat"] ?> + "&long=" + <?= $location["loc_long"] ?> + " class='btn btn-sm text-white mt-2 btn-success text-center'> Track Now </a> ").openPopup();
+					<?php endforeach ?>
 				}
 			<?php else : ?>
 				window.onload = getLocation;
@@ -346,6 +371,11 @@
 					
 				}
 			<?php endif ?>
+
+			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+				return new bootstrap.Tooltip(tooltipTriggerEl)
+			})
 		</script>
 
 		<!-- My JS Configuration -->

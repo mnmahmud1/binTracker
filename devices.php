@@ -5,11 +5,12 @@
 	}
 
 	require 'conn.php';
+	date_default_timezone_set("Asia/Jakarta");
 	
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
 
-	$callDevices = mysqli_query($conn, "SELECT devices.code, history.volume, devices.description, devices.created_at FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
+	$callDevices = mysqli_query($conn, "SELECT devices.code, history.volume, devices.description, devices.created_at, history.created_at AS created_history FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username')");
 
 ?>
 
@@ -58,7 +59,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -74,13 +75,13 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 						</div>
 						<div class="toast-body">
-							<strong>Failed</strong> paired device! or Not Found
+							<strong>Failed</strong> paired device! Not Found or Not Activated
 						</div>
 					</div>
 				</div>
@@ -205,11 +206,27 @@
 												<?php $i=1; foreach ($callDevices as $device) : ?>
 													<tr>
 														<td><?= $i ?></td>
-														<td>Device ID<span class="fw-bold"><?= $device['code'] ?></span></td>
+														<td>Device ID <span class="fw-bold"><?= $device['code'] ?></span></td>
 														<td>
-															<?php if($device['volume'] < 100 ) : ?>
-																<span class="badge rounded-pill text-bg-success px-3"><?= $device['volume'] ?>/100</span>
-															<?php elseif($device['volume'] == 100 ) : ?>
+															<?php
+																$now_date = date('Y-m-d H:i:s'); // the current date
+																$date1 = $device['created_history'];
+																$timestamp1 = strtotime($date1);
+																$timestamp2 = strtotime($now_date);
+																$hour = floor($timestamp2 - $timestamp1)/(60*60);
+															?>
+															
+															<?php if($hour >= 1) : ?>
+																<span class="badge rounded-pill bg-danger px-3">MAINTENANCE</span>
+															<?php endif ?>
+
+															<?php if($device['volume'] < 75 ) : ?>
+																<?php if($device['volume'] < 0 ) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">0/100</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-success px-3"><?= $device['volume'] ?>/100</span>
+																<?php endif ?>
+															<?php elseif($device['volume'] >= 75 ) : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
 															<?php endif ?>
 														</td>

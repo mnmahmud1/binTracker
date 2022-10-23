@@ -954,7 +954,7 @@ WiFiClient wifi;  // Declare object of class WiFiClient
 // Const Variable
 const char* ssid = "POCO X3";
 const char* password = "aaaaaaaa";
-const String code = "MAHMUD";         // Unique Code Device
+const String code = "PROTO1";         // Unique Code Device
 const String Url = "mnmahmud.my.id";  // IP or Server Address
 
 // Declare Ultrasonic Sensor
@@ -1054,7 +1054,7 @@ void loop() {
 
   /// Calibration Volume
   resultVolume = (((100 * volume) / calibration) - 100) * (-1);  // Check % volume
-
+  
   Serial.print("Result Volume % calibration : ");
   Serial.print(resultVolume);
   Serial.println("%");
@@ -1073,5 +1073,5 @@ void loop() {
 
   http.end();  //Close connection
 
-  delay(5000);  //Delay Regular Loop
+  delay(60000);  //Delay Regular Loop
 }

@@ -55,7 +55,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -71,7 +71,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -105,7 +105,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -121,7 +121,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>

@@ -94,7 +94,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -110,7 +110,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -128,7 +128,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -144,7 +144,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -160,7 +160,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -178,7 +178,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -194,7 +194,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -212,7 +212,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -228,7 +228,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -469,7 +469,18 @@
 															<span class="tcgray fs8"> Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></span>
 														</td>
 														<td>
-															<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+															<?php
+																$now_date = date('Y-m-d H:i:s'); // the current date
+																$date1 = $device['created_at'];
+																$timestamp1 = strtotime($date1);
+																$timestamp2 = strtotime($now_date);
+																$hour = floor($timestamp2 - $timestamp1)/(60*60);
+															?>
+															<?php if($hour < 1) : ?>
+																<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+															<?php elseif($hour >= 1) : ?>
+																<span class="badge rounded-pill text-bg-danger px-3">MAINTENANCE</span>
+															<?php endif ?>
 														</td>
 														<td><?= calculateDays(date('Y-m-d', strtotime($device['created_at']))) ?></td>
 														<td>

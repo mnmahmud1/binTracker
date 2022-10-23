@@ -138,7 +138,7 @@
 								<li class="breadcrumb-item active" aria-current="page">Details</li>
 							</ol>
 						</nav>
-						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - Device ID<?= $callDevice['code'] ?></h1>
+						<h1 class="h4 mb-4 fw-bold text-gray-800">Details - Device ID <?= $callDevice['code'] ?></h1>
 
 						<div class="row mb-3">
 							<div class="col">
@@ -168,7 +168,7 @@
 												<tr>
 													<td><?= $i ?></td>
 													<td>
-														Device ID<?= $callDevice['code'] ?> <br />
+														Device ID <span class="fw-bold"><?= $callDevice['code'] ?></span> <br />
 														<span class="tcgray fs8">Adopted at <?= date('Y-m-d g:i A', strtotime($history['created_at'])) ?></span>
 													</td>
 													<td class="tcgray"><span class="fw-bold" style="color: black">#<?= $num ?></span> <?= $history['name'] ?></td>
@@ -187,7 +187,7 @@
 									<div class="card-body">
 										<div class="row d-flex justify-content-between align-items-center mb-4">
 											<div class="col text-start">
-												<span class="h6 fw-bold text-gray-800"> History Checking </span>
+												<span class="h6 fw-bold text-gray-800"> History Checking</span>
 												<br>
 												<span class="fs8 tcgray">Current User</span>
 											</div>
@@ -212,11 +212,15 @@
 												<?php $i=1; foreach($CallHistoryDevice as $historyDevice) : ?>
 													<tr>
 														<td><?= $i ?></td>
-														<td>Device ID<?= $historyDevice['code'] ?></td>
+														<td>Device ID <span class="fw-bold"><?= $historyDevice['code'] ?></span></td>
 														<td>
 															<?php if($historyDevice['volume'] < 100 ) : ?>
-																<span class="badge rounded-pill text-bg-success px-3"><?= $historyDevice['volume'] ?>/100</span>
-															<?php elseif($historyDevice['volume'] == 100 ) : ?>
+																<?php if($historyDevice['volume'] < 0 ) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">0/100</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-success px-3"><?= $historyDevice['volume'] ?>/100</span>
+																<?php endif ?>
+															<?php elseif($historyDevice['volume'] >= 100 ) : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
 															<?php endif ?>
 														</td>

@@ -247,7 +247,7 @@
 
         mysqli_query($conn, "UPDATE history SET adopt = NULL WHERE id = $id");
         
-        if(mysqli_affected_rows($conn)){
+        if(mysqli_affected_rows($conn) || !mysqli_affected_rows($conn)){
             mysqli_query($conn, "INSERT INTO history (id_device, id_user, status, adopt, volume, created_at) VALUES ($id_device, $endAgency, 'TRF', $endAgency, $volume, '$created_at')");
             //! if transfer device was successfull
             if(mysqli_affected_rows($conn)){

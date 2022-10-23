@@ -9,6 +9,7 @@
 
 	$callDevices = mysqli_query($conn, "SELECT id, code, description, created_at FROM devices");
 	$countDevices = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(id) AS value FROM devices"));
+	$callMaintenanceDevice = mysqli_query($conn, "SELECT id FROM history WHERE id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND created_at < DATE_SUB(NOW(), INTERVAL '1' HOUR)");
 	$callAgency = mysqli_query($conn, "SELECT id, name FROM users");
 	$callLocationDevice = mysqli_query($conn, "SELECT code, loc_lat, loc_long FROM devices");
 
@@ -97,7 +98,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -113,7 +114,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -129,7 +130,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -147,7 +148,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -163,7 +164,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -181,7 +182,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -197,7 +198,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -215,7 +216,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -231,7 +232,7 @@
 				<div class="toast-container position-absolute top-0 end-0 p-3" id="toastPlacement">
 					<div class="toast fade show">
 						<div class="toast-header">
-							<i class="fas fa-info-circle"></i>
+							<i class="fas fa-info-circle me-2"></i> 
 							<strong class="me-auto">Attention!</strong>
 							<small>Just Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -339,20 +340,20 @@
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Need Maintenance</div>
-										<h1 class="fw-bold">23</h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($callMaintenanceDevice) ?></h1>
 									</div>
 								</div>
 							</div>
 
 							<!-- Lost Contact -->
-							<div class="col mb-2">
+							<!-- <div class="col mb-2">
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Lost Contact</div>
 										<h1 class="fw-bold">13</h1>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 
 						<div class="row mb-3">
@@ -375,7 +376,7 @@
 											</div>
 											<div class="col text-end">
 												<!-- Button trigger modal Connect Devices -->
-												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectDevice"><i class="fa-solid fa-link"></i> Connect Device</button>
+												<button type="button" id="btnconnect" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectDevice"><i class="fa-solid fa-link"></i> Connect Device</button>
 											</div>
 										</div>
 
@@ -398,7 +399,7 @@
 												<?php $i=1; foreach ($callDevices as $device) : ?>
 													<?php
 														$deviceID = $device['id'];
-														$checkAdopted = mysqli_query($conn, "SELECT id FROM history WHERE id_device = $deviceID ORDER BY id DESC LIMIT 1");
+														$checkAdopted = mysqli_query($conn, "SELECT id, created_at FROM history WHERE id_device = $deviceID ORDER BY id DESC LIMIT 1");
 														$checkAdopt = mysqli_fetch_assoc($checkAdopted);
 														$checkIdentity = mysqli_query($conn, "SELECT users.name, users.id FROM history INNER JOIN users ON history.id_user=users.id WHERE history.id_device = $deviceID ORDER BY history.id DESC LIMIT 1");
 														$checkAdoptedDevice = mysqli_fetch_assoc($checkIdentity);
@@ -406,12 +407,23 @@
 													<tr>
 														<td><?= $i ?></td>
 														<td>
-															Device ID<?= $device['code'] ?> <br />
+															Device ID <span class="fw-bold"><?= $device['code'] ?></span> <br />
 															<span class="tcgray fs8"> Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at']))?></span>
 														</td>
 														<td>
 															<?php if(isset($checkAdopt['id'])) : ?>
-																<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+																<?php
+																	$now_date = date('Y-m-d H:i:s'); // the current date
+																	$date1 = $checkAdopt['created_at'];
+																	$timestamp1 = strtotime($date1);
+																	$timestamp2 = strtotime($now_date);
+																	$hour = floor($timestamp2 - $timestamp1)/(60*60);
+																?>
+																<?php if($hour < 1) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">ACTIVE</span>
+																<?php elseif($hour >= 1) : ?>
+																	<span class="badge rounded-pill text-bg-danger px-3">MAINTENANCE</span>
+																<?php endif ?>
 															<?php else : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">CHECKING</span>
 															<?php endif ?>
@@ -658,6 +670,15 @@
 						L.marker(res.latlng).addTo(getMap).bindPopup(res.address.Match_addr).openPopup();
 					});
 				});
+
+				// LeafLet map doesnt render properly on modal
+				// https://stackoverflow.com/questions/44737760/leaflet-map-doesnt-render-properly-on-modal
+				document.getElementById("btnconnect").onclick = function () {
+					document.getElementById('connectDevice').style.display = 'block';
+					setTimeout(function() {
+						getMap.invalidateSize();
+					}, 100);
+				}
 			}
 		</script>
 		

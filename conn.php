@@ -1,6 +1,6 @@
 <?php
 
-    $conn = mysqli_connect('localhost', 'root', '', 'smartbin_db');
+    $conn = mysqli_connect('localhost', 'mnmahmu1_admin', 'haganosaga12', 'mnmahmu1_smartbin_db');
 
     function convertUsernameToID($username){
         global $conn;

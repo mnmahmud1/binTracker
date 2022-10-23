@@ -160,3 +160,13 @@
 
         header('Location: mapping.php');
     }
+    
+    if(isset($_GET['deleteCookieLoc'])){
+        unset($_COOKIE['trackLat']); 
+        setcookie('trackLat', null, -1, '/'); 
+
+        unset($_COOKIE['trackLong']); 
+        setcookie('trackLong', null, -1, '/'); 
+
+        header('Location: mapping.php');
+    }

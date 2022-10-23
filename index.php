@@ -11,6 +11,10 @@
 
 	$callDevices = mysqli_query($conn, "SELECT devices.code, devices.created_at FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.adopt = (SELECT id FROM users WHERE username = '$username') LIMIT 5");
 	$callHistory = mysqli_query($conn, "SELECT devices.code, history.created_at, history.volume FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id_user = (SELECT id FROM users WHERE username = '$username') ORDER BY history.id DESC LIMIT 5");
+	$callDeviceMaintenance = mysqli_query($conn, "SELECT id FROM history WHERE id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND created_at < DATE_SUB(NOW(), INTERVAL '1' HOUR) AND id_user = (SELECT id FROM users WHERE username = '$username')");
+
+	$countDevices = mysqli_query($conn, "SELECT devices.id FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.adopt = (SELECT id FROM users WHERE username = '$username')");
+	$countDevicesFull = mysqli_query($conn, "SELECT history.id FROM history INNER JOIN devices ON devices.id = history.id_device WHERE history.id IN (SELECT MAX(id) FROM history GROUP BY id_device) AND history.id_user = (SELECT id FROM users WHERE username = '$username') AND history.volume >= 75");
 ?>
 
 <!DOCTYPE html>
@@ -142,36 +146,36 @@
 
 						<div class="row">
 							<!-- Devices -->
-							<div class="col-sm-3 mb-2">
+							<div class="col-sm mb-2">
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Devices</div>
-										<h1 class="fw-bold"><?= mysqli_num_rows($callDevices) ?></h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($countDevices) ?></h1>
 									</div>
 								</div>
 							</div>
 
 							<!-- Trash Full -->
-							<div class="col-sm-3 mb-2">
+							<div class="col-sm mb-2">
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Trash Full</div>
-										<h1 class="fw-bold">4</h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($countDevicesFull) ?></h1>
 									</div>
 								</div>
 							</div>
 
 							<!-- Need Maintenance -->
-							<div class="col-sm-3 mb-2">
+							<div class="col-sm mb-2">
 								<div class="card text-center">
 									<div class="card-body">
 										<div class="card-title">Maintenance</div>
-										<h1 class="fw-bold">2</h1>
+										<h1 class="fw-bold"><?= mysqli_num_rows($callDeviceMaintenance) ?></h1>
 									</div>
 								</div>
 							</div>
 
-							<!-- Lost Contact -->
+							<!-- Lost Contact
 							<div class="col-sm-3 mb-2">
 								<div class="card text-center">
 									<div class="card-body">
@@ -179,7 +183,7 @@
 										<h1 class="fw-bold">3</h1>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<!-- /.container-fluid -->
@@ -219,7 +223,7 @@
 											<?php foreach ($callDevices as $device) : ?>
 												<li class="list-group-item">
 													<div class="d-flex justify-content-between">
-														<span>Device ID<span class="fw-bold"><?= $device['code'] ?></span></span>
+														<span>Device ID <span class="fw-bold"><?= $device['code'] ?></span></span>
 														<span class="fs8 tcgray">Registered at <?= date('Y-m-d g:i A', strtotime($device['created_at'])) ?></span>
 													</div>
 												</li>
@@ -258,15 +262,19 @@
 												<li class="list-group-item">
 													<div class="row justify-content-between align-items-baseline">
 														<div class="col">
-															<span>Device ID<span class="fw-bold"><?= $history['code'] ?></span></span>
+															<span>Device ID <span class="fw-bold"><?= $history['code'] ?></span></span>
 														</div>
 														<div class="col text-start">
 															<span class="fs8 tcgray"><?= date('Y-m-d g:i A', strtotime($history['created_at'])) ?></span>
 														</div>
 														<div class="col text-end">
-															<?php if($history['volume'] < 100 ) : ?>
-																<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
-															<?php elseif($history['volume'] == 100 ) : ?>
+															<?php if($history['volume'] < 75 ) : ?>
+																<?php if($history['volume'] < 0 ) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">0/100</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
+																<?php endif ?>
+															<?php elseif($history['volume'] >= 75 ) : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
 															<?php endif ?>
 														</div>

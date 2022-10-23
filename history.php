@@ -5,6 +5,7 @@
 	}
 
 	require 'conn.php';
+	date_default_timezone_set("Asia/Jakarta");
 	
 	$username = $_COOKIE["signin"];
 	$checkName = mysqli_fetch_assoc(mysqli_query($conn, "SELECT name FROM users WHERE username = '$username'"));
@@ -166,9 +167,13 @@
 														<td><span class="fw-bold"><?= $i ?></span> </td>
 														<td>Device ID<span class="fw-bold"><?= $history['code'] ?></span></td>
 														<td>
-															<?php if($history['volume'] < 100 ) : ?>
-																<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
-															<?php elseif($history['volume'] == 100 ) : ?>
+															<?php if($history['volume'] < 75 ) : ?>
+																<?php if($history['volume'] < 0 ) : ?>
+																	<span class="badge rounded-pill text-bg-success px-3">0/100</span>
+																<?php else : ?>
+																	<span class="badge rounded-pill text-bg-success px-3"><?= $history['volume'] ?>/100</span>
+																<?php endif ?>
+															<?php elseif($history['volume'] >= 75 ) : ?>
 																<span class="badge rounded-pill text-bg-warning px-3">FULL</span>
 															<?php endif ?>
 														</td>
