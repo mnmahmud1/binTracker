@@ -444,7 +444,7 @@
 																<?php if(isset($checkAdoptedDevice['name'])) : ?>
 																	<li><button class="dropdown-item" onclick="urlCookieTo('deviceDetails', '<?= $deviceID ?>', 1)">Details</button></li>
 																	<li><button class="dropdown-item" name="transferButton" id="transferButton" data-bs-toggle="modal" data-bs-target="#transferDevice" data-nameagency="<?= $checkAdoptedDevice['name'] ?>" data-idagency="<?= $checkAdoptedDevice['id'] ?>" data-iddevice="<?= $deviceID ?>">Transfer</button></li>
-																	<li><button class="dropdown-item" onclick="return alertModal('function.php?disconnectDevice=1&id=<?= $deviceID ?>&page=device-production.php', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
+																	<li><button class="dropdown-item" onclick="return alertModal('function.php?disconnectDevice=1&id=<?= $deviceID ?>', 'Disconnect', 'After disconnect this device must be readopting to use again!')">Disconnect</button></li>
 																<?php else : ?>
 																	<li><button class="dropdown-item" onclick="return alertModal('function.php?deleteDevice=1&id=<?= $deviceID ?>', 'Delete', 'After delete this device must be readopting to use again!')">Delete</button></li>
 																<?php endif ?>

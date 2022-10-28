@@ -303,18 +303,17 @@
     // Disconnect devices with success connect
     if(isset($_GET['disconnectDevice'])){
         $id = $_GET['id'];
-        $page = $_GET['page'];
         
         mysqli_query($conn, "DELETE devices, history FROM devices INNER JOIN history ON devices.id = history.id_device WHERE devices.id = $id");
         
         if(mysqli_affected_rows($conn)){
             //! if disconnect device was successfull
             setcookie("disconnectDevice", "success", time() + 5, "/");
-            header('Location: '.$page.'');
+            header('Location: device-production.php');
         } else {
             //! if disconnect device was failed
             setcookie("disconnectDevice", "failed", time() + 5, "/");
-            header('Location: '.$page.'');
+            header('Location: device-production.php');
         }
     }
 
