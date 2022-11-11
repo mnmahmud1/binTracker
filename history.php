@@ -165,7 +165,7 @@
 												<?php $i=mysqli_num_rows($callHistory); foreach ($callHistory as $history) : ?>
 													<tr>
 														<td><span class="fw-bold"><?= $i ?></span> </td>
-														<td>Device ID<span class="fw-bold"><?= $history['code'] ?></span></td>
+														<td>Device ID <span class="fw-bold"><?= $history['code'] ?></span></td>
 														<td>
 															<?php if($history['volume'] < 75 ) : ?>
 																<?php if($history['volume'] < 0 ) : ?>

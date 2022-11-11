@@ -49,6 +49,14 @@
 
 		<!-- My configuration css -->
 		<link rel="stylesheet" href="dist/css/style.css" />
+
+		<!-- Example Code Bootstrap 5.2 -->
+		<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+
+		<!-- Boootstrap v5.2 -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 	</head>
 
 	<body id="page-top">
@@ -160,11 +168,19 @@
 								<div class="card">
 									<div class="card-body">
 										<div class="row mb-4">
-											<div class="col d-flex justify-content-between">
+											<div class="col d-flex justify-content-between align-baseline">
 												<span class="h6 fw-bold text-gray-800"> Devices List </span>
 												<button type="button" class="btn btn-sm btn-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Reload Tracking" onclick="window.location.href = 'function.php?deleteCookieLoc=1'">
 													<i class="fa-solid fa-rotate"></i>
 												</button>
+												<div class="form-check form-switch">
+													<?php if($_COOKIE['autoRef'] == '1') : ?>
+														<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+													<?php else : ?>
+														<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+													<?php endif ?>
+													<label class="form-check-label" for="flexSwitchCheckChecked">Auto Refresh</label>
+												</div>
 											</div>
 										</div>
 
@@ -272,7 +288,7 @@
 
 		<!-- Bootstrap core JavaScript-->
 		<!-- <script src="vendor/jquery/jquery.min.js"></script> -->
-		<script src="dist/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- <script src="dist/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
 
 		<!-- Jquery 3.6.0 -->
 		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -281,10 +297,7 @@
 		<script src="dist/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 		<!-- Custom scripts for all pages-->
-		<script src="dist/js/sb-admin-2.min.js"></script>
-
-		<!-- Boootstrap v5.2 -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+		<!-- <script src="dist/js/sb-admin-2.min.js"></script> -->
 
 		<!-- Datatables -->
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
@@ -297,6 +310,9 @@
 		
 		<!-- Leaflet Routing Machine -->
 		<script src="dist/js/leaflet-routing-machine.js"></script>
+
+		<!-- Jquery Cookie -->
+		<script src="dist/js/jquery.cookie.js"></script>
 
 		<!-- Local Script JS -->
 		<script>
@@ -376,6 +392,23 @@
 			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 				return new bootstrap.Tooltip(tooltipTriggerEl)
 			})
+			
+			// Set switch button
+			$("#flexSwitchCheckChecked").on('change', function() {
+				if ($(this).is(':checked')) {
+					$.cookie('autoRef', "1", { expires: 1, path: '/' });
+				}
+				else {
+					$.cookie('autoRef', "0", { expires: 1, path: '/' });
+				}
+			});
+
+			// Set interval auto refresh 20 detik
+			setInterval(function() {
+				if($.cookie('autoRef') == '1'){
+					location.reload();
+				}
+			}, 20000);
 		</script>
 
 		<!-- My JS Configuration -->
