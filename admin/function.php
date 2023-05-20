@@ -155,8 +155,8 @@
 
     // Update Password /User
     if(isset($_POST["updatePassAgency"])){
-        $oldPassword = $_POST['oldPassword'];
-        $newPassword = $_POST['newPassword'];
+        $oldPassword = trim(htmlspecialchars($_POST['oldPassword']));
+        $newPassword = trim(htmlspecialchars($_POST['newPassword']));
 
         $ID = $_COOKIE["user"];
         $checkPass = mysqli_fetch_assoc(mysqli_query($conn, "SELECT password FROM users WHERE id = $ID"));
@@ -309,11 +309,11 @@
         if(mysqli_affected_rows($conn)){
             //! if disconnect device was successfull
             setcookie("disconnectDevice", "success", time() + 5, "/");
-            header('Location: device-production.php');
+            header("Location: devices-production.php");
         } else {
             //! if disconnect device was failed
             setcookie("disconnectDevice", "failed", time() + 5, "/");
-            header('Location: device-production.php');
+            header("Location: devices-production.php");
         }
     }
 

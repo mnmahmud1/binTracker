@@ -1075,3 +1075,111 @@ void loop() {
 
   delay(60000);  //Delay Regular Loop
 }
+
+
+
+~~~ SIM 800L fix ALL
+#include <SoftwareSerial.h>
+
+#define echoPin D3  // echoPin in HC-SR04 at pin (D3).
+#define trigPin D4  // trigPin in HC-SR04 at pin (D4).
+
+const String code = "PROTO1";         // Unique Code Device
+const String url = "mnmahmud.my.id";  // IP or Server Address
+int calibration, volume, resultVolume;  // Calibration Earlier & Volume Bin Now
+
+String apn = "internet";                    //APN
+String apn_u = "";                     //APN-Username
+String apn_p = "";                     //APN-Password
+
+SoftwareSerial mySerial(D8, D7); // sim800l_TX_pin, sim800l_RX_pin
+int counter = 0;
+
+void setup()
+{
+  // Declare HC-SR04
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Calibrate Ulrasonic Sensor JSN-SR04
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    duration = pulseIn(echoPin, HIGH);
+
+    calibration = duration * 0.034 / 2;
+
+    Serial.print("Calibration : ");
+    Serial.print(calibration);
+    Serial.println(" cm");
+
+    delay(2000);  //Delay Calibration Arduino
+  }
+  
+  // Configure SIM800L 
+  Serial.begin(9600);
+  Serial.println("SIM800 AT CMD Test");
+  mySerial.begin(9600);
+  delay(5000);
+  while (mySerial.available()) {
+    Serial.write(mySerial.read());
+  }
+  delay(2000);
+  configure_gprs();
+}
+
+void loop() {
+
+  String link = String(url);
+  String device = String(code);
+  String persen = String(resultVolume);
+  
+  send_to_server(link, device, persen);
+  delay(2000);
+}
+
+void send_to_server( String link, String device, String persen) {
+  String sendURL = "http://" + link + "/binTracker/create_history.php?createHistory=1&code='" + device + "'&"; + "volume=" + persen;
+  Serial.println(" --- Start GPRS & HTTP --- ");
+  send_to_serial("AT+SAPBR=1,1");
+  send_to_serial("AT+SAPBR=2,1");
+  send_to_serial("AT+HTTPINIT");
+  send_to_serial("AT+HTTPPARA=CID,1");
+  send_to_serial("AT+HTTPPARA=URL," + sendURL);
+  send_to_serial("AT+HTTPPARA=CONTENT,application/x-www-form-urlencoded");
+  send_to_serial("AT+HTTPDATA=192,5000");
+  send_to_serial(link, device, persen);
+  send_to_serial("AT+HTTPACTION=1");
+  send_to_serial("AT+HTTPREAD");
+  send_to_serial("AT+HTTPTERM");
+  send_to_serial("AT+SAPBR=0,1");
+}
+
+void configure_gprs() {
+  Serial.println(" --- CONFIG GPRS --- ");
+  send_to_serial("AT+SAPBR=3,1,Contype,GPRS");
+  send_to_serial("AT+SAPBR=3,1,APN," + apn);
+  if (apn_u != "") {
+    send_to_serial("AT+SAPBR=3,1,USER," + apn_u);
+  }
+  if (apn_p != "") {
+    send_to_serial("AT+SAPBR=3,1,PWD," + apn_p);
+  }
+}
+
+void send_to_serial(String command) {
+  Serial.println("Send ->: " + command);
+  mySerial.println(command);
+  long wtimer = millis();
+  while (wtimer + 3000 > millis()) {
+    while (mySerial.available()) {
+      Serial.write(mySerial.read());
+    }
+  }
+  Serial.println();
+}
