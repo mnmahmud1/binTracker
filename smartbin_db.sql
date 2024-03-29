@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2022 at 05:47 PM
+-- Generation Time: May 20, 2023 at 02:03 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.24
 
@@ -41,7 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `name`, `username`, `password`, `updated_at`, `created_at`) VALUES
-(1, 'M Nurhasan Mahmudi', 'admin', '$2y$10$ocTvkqfSVWKxdYIUXmXdhOsXffJrk3TJ6E6aUyakjijkxi2e8d/02', '2022-09-15 15:50:50', '2022-09-01 22:50:39');
+(1, 'M Nurhasan Mahmudi', 'admin', '$2y$10$fxL7FBltv3.ehAFfRFoEDuY4eg9gIJWoBSPMqJscSb2.lcXQlMKHS', '2022-10-21 14:26:51', '2022-09-01 22:50:39');
 
 -- --------------------------------------------------------
 
@@ -53,6 +53,8 @@ CREATE TABLE `devices` (
   `id` int(11) NOT NULL,
   `code` varchar(6) NOT NULL,
   `description` text NOT NULL,
+  `loc_lat` varchar(20) NOT NULL,
+  `loc_long` varchar(20) NOT NULL,
   `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -61,11 +63,10 @@ CREATE TABLE `devices` (
 -- Dumping data for table `devices`
 --
 
-INSERT INTO `devices` (`id`, `code`, `description`, `update_at`, `created_at`) VALUES
-(1, '123456', 'Perangkat 1', '2022-09-17 16:37:04', '2022-09-08 21:56:28'),
-(9, 'EKAPRA', 'dekat alfamidi', '2022-09-19 13:07:25', '2022-09-19 20:07:25'),
-(10, 'APAKEK', 'opsional', '2022-09-19 18:14:43', '2022-09-20 01:14:43'),
-(11, 'MAHMUD', 'ada dirumah mahmudi', '2022-09-22 16:49:03', '2022-09-22 23:49:03');
+INSERT INTO `devices` (`id`, `code`, `description`, `loc_lat`, `loc_long`, `update_at`, `created_at`) VALUES
+(1, 'PROTO1', 'STTM 07/10/2022', '-6.3991213999999985', '106.96599335582061', '2022-10-07 16:49:45', '2022-10-07 23:45:12'),
+(2, 'PROTO2', 'ELOK JAYA 07/10/2022', '-6.394749101487642', '106.96994335054359', '2022-10-07 16:51:11', '2022-10-07 23:50:55'),
+(3, 'PROTO3', 'di sungai cileungsi', '-6.398321029200823', '106.9734082120388', '2022-10-23 07:15:03', '2022-10-08 22:44:02');
 
 -- --------------------------------------------------------
 
@@ -80,8 +81,6 @@ CREATE TABLE `history` (
   `status` varchar(3) DEFAULT NULL,
   `adopt` int(11) DEFAULT NULL,
   `volume` int(11) NOT NULL,
-  `loc_lat` varchar(30) NOT NULL,
-  `loc_long` varchar(30) NOT NULL,
   `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -90,16 +89,26 @@ CREATE TABLE `history` (
 -- Dumping data for table `history`
 --
 
-INSERT INTO `history` (`id`, `id_device`, `id_user`, `status`, `adopt`, `volume`, `loc_lat`, `loc_long`, `update_at`, `created_at`) VALUES
-(53, 1, NULL, NULL, NULL, 30, '-6.428218', '106.944584', '2022-09-23 15:12:51', '2022-09-23 22:12:51'),
-(54, 1, 6, 'TRF', 6, 47, '-6.428218', '106.944584', '2022-09-23 15:54:51', '2022-09-23 22:12:51'),
-(56, 9, 2, 'TRF', 2, 12, '-6.428224', '106.944511', '2022-09-23 16:00:14', '2022-09-23 22:12:51'),
-(57, 9, 2, NULL, NULL, 34, '-6.428224', '106.944511', '2022-09-23 16:00:14', '2022-09-23 22:12:51'),
-(58, 1, 6, NULL, NULL, 58, '-6.428218', '106.944584', '2022-09-25 09:00:18', '2022-09-23 22:12:51'),
-(59, 10, NULL, NULL, NULL, 12, '-6.3991062', '106.965896', '2022-09-25 09:28:06', '2022-09-25 16:00:18'),
-(61, 10, 2, 'TRF', 2, 12, '-6.3991062', '106.965896', '2022-09-25 09:28:06', '2022-09-25 16:00:18'),
-(62, 10, 2, NULL, NULL, 21, '-6.428066', '106.9476664', '2022-09-25 09:40:06', '2022-09-25 16:00:18'),
-(97, 11, NULL, NULL, NULL, 34, '-6.3991224', '106.9659016', '2022-09-25 12:20:12', '2022-09-25 19:20:12');
+INSERT INTO `history` (`id`, `id_device`, `id_user`, `status`, `adopt`, `volume`, `update_at`, `created_at`) VALUES
+(1, 1, NULL, NULL, NULL, 0, '2022-10-07 16:57:05', '2022-10-07 23:57:05'),
+(2, 1, NULL, NULL, NULL, -5, '2022-10-07 16:57:11', '2022-10-07 23:57:11'),
+(3, 1, NULL, NULL, NULL, 71, '2022-10-07 16:57:17', '2022-10-07 23:57:17'),
+(4, 1, NULL, NULL, NULL, -5, '2022-10-07 16:57:23', '2022-10-07 23:57:23'),
+(5, 1, NULL, NULL, NULL, -5, '2022-10-07 16:57:29', '2022-10-07 23:57:29'),
+(6, 1, NULL, NULL, NULL, -5, '2022-10-07 16:57:35', '2022-10-07 23:57:35'),
+(7, 1, 6, 'TRF', NULL, -5, '2022-10-08 13:48:01', '2022-10-07 23:57:42'),
+(8, 2, 6, 'TRF', NULL, 20, '2022-10-21 14:23:05', '2022-10-08 20:21:02'),
+(9, 1, 2, 'TRF', NULL, -5, '2022-10-08 13:51:25', '2022-10-08 20:48:01'),
+(10, 1, 7, 'TRF', NULL, -5, '2022-10-15 12:53:59', '2022-10-08 20:51:25'),
+(11, 1, 5, 'TRF', NULL, -5, '2022-10-15 12:56:33', '2022-10-15 19:53:59'),
+(12, 1, 8, 'TRF', NULL, -5, '2022-10-15 18:39:06', '2022-10-15 19:56:33'),
+(13, 1, 6, 'TRF', NULL, -5, '2022-10-15 18:42:20', '2022-10-16 01:39:06'),
+(14, 1, 7, 'TRF', 7, -5, '2022-10-15 18:42:20', '2022-10-16 01:42:20'),
+(15, 2, 5, 'TRF', NULL, 20, '2022-10-21 14:23:26', '2022-10-21 21:23:05'),
+(16, 2, 6, 'TRF', 6, 20, '2022-10-21 14:23:26', '2022-10-21 21:23:26'),
+(17, 3, 6, 'TRF', 6, 100, '2022-10-23 01:05:09', '2022-10-23 13:22:05'),
+(18, 3, 6, 'TRF', NULL, 80, '2022-10-23 06:45:30', '2022-10-23 13:42:05'),
+(19, 3, 6, 'TRF', NULL, 76, '2022-10-23 09:11:19', '2022-10-23 13:44:05');
 
 -- --------------------------------------------------------
 
@@ -152,7 +161,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `bussines`, `address`, `tel`, `email`, `username`, `password`, `updated_at`, `created_at`) VALUES
-(2, 'STT Muhammadiyah Cileungsi', 'Education', 'Jl. Anggrek No.25, Perum. PTSC, Cileungsi, Kec. Cileungsi, Kabupaten Bogor, Jawa Barat 16820', '0218249550', 'sttmcileungsi@gmail.com', 'sttmc', '$2y$10$O9vJeSJCXC2d.f66J01Vzuy7oMdG.L3wWdFVHvq0f4Wl0JfwysnhO', '2022-09-15 15:51:53', '2022-09-04 22:51:49'),
 (5, 'Taman Bunga Nusantara', 'Flower', 'Jl. Mariwati No.KM. 7, Kawungluwuk, Kec. Sukaresmi, Kabupaten Cianjur, Jawa Barat 43254', '0263581617', 'cstamanbunga@gmail.com', 'cstamanbunga', '$2y$10$8J0ZxiJxoHvXf1quuBRVwuQprIc2yG/9EnGTrpq8Dx6oMkIydlEpC', '2022-09-15 15:51:56', '2022-09-04 22:51:49'),
 (6, 'Curug Ciherang (Jonggol-Sukamakmur)', 'Nature', 'Sirnajaya, Wargajaya, Kec. Sukamakmur, Kabupaten Bogor, Jawa Barat 16830', '085710691261', 'csciherang@ymail.com', 'csciherang', '$2y$10$6PWOBd9ADWRlqtNTpiaCJ.xRCcmu9IJIO1RL/NuIf8xaempHzFr2e', '2022-09-15 15:51:59', '2022-09-04 22:51:49'),
 (7, 'Cibodas Botanical Garden (Kebun Raya Cibodas)', 'Natures', 'Jl. Kebun Raya Cibodas, Sindangjaya, Kec. Cipanas, Kabupaten Cianjur, Jawa Barat 43253', '0263512233', 'cskbcibodas@gmail.com', 'cskbcibodas', '$2y$10$KBF5Fs9mC16qLqnkFYcswOKu3DQjPsrWZre.S0B0CKYuXVfZpCrw.', '2022-09-15 15:52:03', '2022-09-04 22:51:49');
@@ -205,13 +213,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `devices`
 --
 ALTER TABLE `devices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `requests`
@@ -223,7 +231,7 @@ ALTER TABLE `requests`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
